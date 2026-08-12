@@ -1,0 +1,116 @@
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+
+const API_BASE = 'http://localhost:3000/api';
+
+export default function FormularioModal({ isOpen, onClose, onSave, itemEdit, fields = [], selectOptions = {} }) {
+  const [formData, setFormData] = useState({});
+
+  // Cuando se abre el modal, reiniciamos el formulario
+  useEffect(() => {
+    if (itemEdit) {
+      setFormData(itemEdit);
+    } else {
+      // Iniciar form vacío solo con los campos de negocio configurados
+      const emptyForm = {};
+      fields.forEach(f => { emptyForm[f.name] = ''; });
+      setFormData(emptyForm);
+    }
+  }, [itemEdit, isOpen, fields]);
+
+  if (!isOpen) return null;
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSave(formData);
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+      <div className="flex items-end justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+        
+        {/* Background overlay con desenfoque (blur) */}
+        <div 
+          className="fixed inset-0 transition-opacity bg-gray-500/50 backdrop-blur-sm" 
+          aria-hidden="true" 
+          onClick={onClose}
+        ></div>
+
+        <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+
+        {/* Modal panel */}
+        <div className="relative z-10 inline-block px-4 pt-5 pb-4 overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
+          <div>
+            <h3 className="text-lg font-medium leading-6 text-gray-900" id="modal-title">
+              {itemEdit ? `Editar Registro #${itemEdit[Object.keys(itemEdit)[0]]}` : 'Crear Nuevo Registro'}
+            </h3>
+            <div className="mt-4">
+              <form onSubmit={handleSubmit} id="crud-form">
+                
+                {fields.map((field) => {
+                  return (
+                    <div className="mb-4" key={field.name}>
+                      <label htmlFor={field.name} className="block text-sm font-medium text-gray-700">
+                        {field.label}
+                      </label>
+
+                      {field.type === 'select' ? (
+                        <select
+                          name={field.name}
+                          id={field.name}
+                          value={formData[field.name] || ''}
+                          onChange={handleChange}
+                          className="block w-full px-3 py-2 mt-1 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                          required
+                        >
+                          <option value="" disabled>Selecciona una opción</option>
+                          {(selectOptions[field.name] || []).map(opt => (
+                            <option key={opt.id || opt.ID_ESTADO_USA} value={opt.id || opt.ID_ESTADO_USA}>
+                              {opt.NOMBRE || opt.nombre || opt.id}
+                            </option>
+                          ))}
+                        </select>
+                      ) : (
+                        <input
+                          type={field.type}
+                          name={field.name}
+                          id={field.name}
+                          value={formData[field.name] || ''}
+                          onChange={handleChange}
+                          className="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                          required
+                        />
+                      )}
+                    </div>
+                  );
+                })}
+
+              </form>
+            </div>
+          </div>
+          <div className="mt-5 sm:mt-6 sm:flex sm:flex-row-reverse">
+            <button
+              type="submit"
+              form="crud-form"
+              className="inline-flex justify-center w-full px-4 py-2 text-base font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm"
+            >
+              Guardar
+            </button>
+            <button
+              type="button"
+              onClick={onClose}
+              className="inline-flex justify-center w-full px-4 py-2 mt-3 text-base font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+            >
+              Cancelar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

@@ -1,0 +1,8 @@
+RewriteEngine On
+
+# Si el archivo o directorio existe, no reescribir
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Reescribir /tabla y /tabla/id a index.php
+RewriteRule ^([^/]+)(?:/([^/]+))?/?$ index.php?tabla=$1&id=$2 [L,QSA]
