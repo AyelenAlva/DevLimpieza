@@ -24,4 +24,4 @@ Actualmente el CRUD se gestiona mediante transacciones en PHP ya que las vistas 
   - *Nota: En `vite.config.js` está configurado `base: './'` para que pueda servirse desde un subdirectorio en IONOS (ej. `/app/`).*
 
 ## Despliegue (Deploy) a IONOS
-Existe un script `backend/upload.cjs` que utiliza SFTP para automatizar la subida de los archivos PHP de la API al servidor remoto. Para subir el Frontend, existe el script `backend/upload_frontend.cjs`.
+Existe un script `scripts/upload.cjs` que utiliza SFTP para automatizar la subida de los archivos PHP de la API al servidor remoto. Para subir el Frontend, existe el script `scripts/upload_frontend.cjs`.
