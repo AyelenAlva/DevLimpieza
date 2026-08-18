@@ -21,38 +21,39 @@ export default function TablaParametrica({ data, onEdit, onDelete, fields = [], 
   };
 
   return (
-    <div className="overflow-x-auto shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-      <table className="min-w-full divide-y divide-gray-300">
-        <thead className="bg-gray-50">
+    <div className="flex-1 overflow-auto bg-white rounded-lg shadow">
+      <table className="min-w-full text-left text-sm whitespace-nowrap">
+        <thead className="uppercase tracking-wider border-b-2 border-gray-200 bg-gray-50">
           <tr>
             {columns.map((col) => (
               <th
                 key={col}
                 scope="col"
-                className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 uppercase tracking-wider"
+                className="px-6 py-4"
               >
                 {col.replace('_', ' ')}
               </th>
             ))}
-            <th scope="col" className="relative px-3 py-3.5">
+            <th scope="col" className="px-6 py-4">
               <span className="sr-only">Acciones</span>
             </th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-200 bg-white">
+        </thead>
+        <tbody>
           {data.map((row, index) => {
             const pkValue = row[columns[0]] || index;
             return (
-            <tr key={pkValue} className="hover:bg-gray-50">
+            <tr key={pkValue} className="border-b border-gray-100 hover:bg-gray-50">
               {columns.map((col) => (
-                <td key={`${pkValue}-${col}`} className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                <td key={`${pkValue}-${col}`} className="px-6 py-4">
                   {renderCell(col, row[col])}
                 </td>
               ))}
-              <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+              <td className="px-6 py-4">
                 <button
                   onClick={() => onEdit(row)}
-                  className="text-indigo-600 hover:text-indigo-900 mr-4"
+                  className="text-indigo-600 hover:text-indigo-900 mr-3"
                 >
                   Editar
                 </button>
