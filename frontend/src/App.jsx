@@ -140,9 +140,9 @@ function App() {
 
   return (
     <div className="flex h-screen bg-gray-50 overflow-hidden font-sans">
-      {/* Sidebar - Modern Glassmorphism */}
-      <aside className="w-72 glass-dark text-gray-300 flex flex-col shadow-2xl relative z-20">
-        <div className="p-6 text-center border-b border-gray-700/50">
+      {/* Sidebar - Solid Dark theme */}
+      <aside className="w-72 bg-[#0B1120] text-gray-300 flex flex-col shadow-2xl relative z-20">
+        <div className="p-6 text-center border-b border-gray-800">
           <h1 className="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300 tracking-tight">
             LIMPIEZA
           </h1>
@@ -156,17 +156,17 @@ function App() {
           <span>Paramétricas</span>
           <svg className={`w-4 h-4 transition-transform ${openSection === 'parametricas' ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
         </button>
-        <div className={`transition-all duration-300 ease-in-out ${openSection === 'parametricas' ? 'flex-1 opacity-100 max-h-[50vh]' : 'max-h-0 opacity-0 overflow-hidden'}`}>
-          <nav className="overflow-y-auto px-4 custom-scrollbar h-full">
-            <ul className="space-y-1.5 pb-4">
+        <div className={`transition-all duration-300 ease-in-out ${openSection === 'parametricas' ? 'opacity-100 max-h-[1000px]' : 'max-h-0 opacity-0 overflow-hidden'}`}>
+          <nav className="px-4 pb-2">
+            <ul className="space-y-1">
             {TABLAS.map(tabla => (
               <li key={tabla.id}>
                 <button
                   onClick={() => setActiveTab(tabla.id)}
-                  className={`w-full text-left px-4 py-2.5 rounded-xl transition-all duration-200 flex items-center gap-3 ${
+                  className={`w-full text-left px-3 py-2 rounded-lg transition-all duration-200 flex items-center gap-3 text-sm ${
                     activeTab === tabla.id 
-                      ? 'bg-gradient-to-r from-blue-600/20 to-indigo-600/10 text-blue-400 font-semibold shadow-inner' 
-                      : 'hover:bg-gray-800/50 hover:text-white'
+                      ? 'bg-blue-600/20 text-blue-400 font-semibold' 
+                      : 'hover:bg-gray-800/80 hover:text-white'
                   }`}
                 >
                   <div className={`w-1.5 h-1.5 rounded-full ${activeTab === tabla.id ? 'bg-blue-400' : 'bg-transparent'}`}></div>
@@ -180,21 +180,21 @@ function App() {
         
         <button 
           onClick={() => setOpenSection(openSection === 'gestion' ? null : 'gestion')}
-          className="w-full px-6 py-4 flex justify-between items-center text-xs font-bold text-gray-500 uppercase tracking-widest border-t border-gray-700/50 hover:text-white transition-colors"
+          className="w-full px-6 py-4 flex justify-between items-center text-xs font-bold text-gray-500 uppercase tracking-widest border-t border-gray-800 hover:text-white transition-colors"
         >
           <span>Gestión de Personas</span>
           <svg className={`w-4 h-4 transition-transform ${openSection === 'gestion' ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
         </button>
-        <div className={`transition-all duration-300 ease-in-out ${openSection === 'gestion' ? 'flex-1 opacity-100 max-h-[50vh]' : 'max-h-0 opacity-0 overflow-hidden'}`}>
-          <nav className="overflow-y-auto px-4 pb-6 custom-scrollbar h-full">
-            <ul className="space-y-1.5">
+        <div className={`transition-all duration-300 ease-in-out ${openSection === 'gestion' ? 'opacity-100 max-h-[1000px]' : 'max-h-0 opacity-0 overflow-hidden'}`}>
+          <nav className="px-4 pb-4">
+            <ul className="space-y-1">
             <li>
               <button
                 onClick={() => setActiveTab('alta_cliente')}
-                className={`w-full text-left px-4 py-2.5 rounded-xl transition-all duration-200 flex items-center gap-3 ${
+                className={`w-full text-left px-3 py-2 rounded-lg transition-all duration-200 flex items-center gap-3 text-sm ${
                   activeTab === 'alta_cliente' 
-                    ? 'bg-gradient-to-r from-blue-600/20 to-indigo-600/10 text-blue-400 font-semibold shadow-inner' 
-                    : 'hover:bg-gray-800/50 hover:text-white'
+                    ? 'bg-blue-600/20 text-blue-400 font-semibold' 
+                    : 'hover:bg-gray-800/80 hover:text-white'
                 }`}
               >
                 <div className={`w-1.5 h-1.5 rounded-full ${activeTab === 'alta_cliente' ? 'bg-blue-400' : 'bg-transparent'}`}></div>
@@ -204,10 +204,10 @@ function App() {
             <li>
               <button
                 onClick={() => setActiveTab('alta_empleado')}
-                className={`w-full text-left px-4 py-2.5 rounded-xl transition-all duration-200 flex items-center gap-3 ${
+                className={`w-full text-left px-3 py-2 rounded-lg transition-all duration-200 flex items-center gap-3 text-sm ${
                   activeTab === 'alta_empleado' 
-                    ? 'bg-gradient-to-r from-blue-600/20 to-indigo-600/10 text-blue-400 font-semibold shadow-inner' 
-                    : 'hover:bg-gray-800/50 hover:text-white'
+                    ? 'bg-blue-600/20 text-blue-400 font-semibold' 
+                    : 'hover:bg-gray-800/80 hover:text-white'
                 }`}
               >
                 <div className={`w-1.5 h-1.5 rounded-full ${activeTab === 'alta_empleado' ? 'bg-blue-400' : 'bg-transparent'}`}></div>
@@ -217,10 +217,10 @@ function App() {
             <li>
               <button
                 onClick={() => setActiveTab('alta_distribuidora')}
-                className={`w-full text-left px-4 py-2.5 rounded-xl transition-all duration-200 flex items-center gap-3 ${
+                className={`w-full text-left px-3 py-2 rounded-lg transition-all duration-200 flex items-center gap-3 text-sm ${
                   activeTab === 'alta_distribuidora' 
-                    ? 'bg-gradient-to-r from-blue-600/20 to-indigo-600/10 text-blue-400 font-semibold shadow-inner' 
-                    : 'hover:bg-gray-800/50 hover:text-white'
+                    ? 'bg-blue-600/20 text-blue-400 font-semibold' 
+                    : 'hover:bg-gray-800/80 hover:text-white'
                 }`}
               >
                 <div className={`w-1.5 h-1.5 rounded-full ${activeTab === 'alta_distribuidora' ? 'bg-blue-400' : 'bg-transparent'}`}></div>
@@ -230,10 +230,10 @@ function App() {
             <li>
               <button
                 onClick={() => setActiveTab('alta_pedido')}
-                className={`w-full text-left px-4 py-2.5 rounded-xl transition-all duration-200 flex items-center gap-3 ${
+                className={`w-full text-left px-3 py-2 rounded-lg transition-all duration-200 flex items-center gap-3 text-sm ${
                   activeTab === 'alta_pedido' 
-                    ? 'bg-gradient-to-r from-blue-600/20 to-indigo-600/10 text-blue-400 font-semibold shadow-inner' 
-                    : 'hover:bg-gray-800/50 hover:text-white'
+                    ? 'bg-blue-600/20 text-blue-400 font-semibold' 
+                    : 'hover:bg-gray-800/80 hover:text-white'
                 }`}
               >
                 <div className={`w-1.5 h-1.5 rounded-full ${activeTab === 'alta_pedido' ? 'bg-blue-400' : 'bg-transparent'}`}></div>
