@@ -39,7 +39,6 @@ export default function TablaParametrica({ data, onEdit, onDelete, fields = [], 
             </th>
           </tr>
         </thead>
-        </thead>
         <tbody>
           {data.map((row, index) => {
             const pkValue = row[columns[0]] || index;
