@@ -32,11 +32,10 @@ export default function FormularioModal({ isOpen, onClose, onSave, itemEdit, fie
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-      <div className="flex items-end justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+      <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
         
-        {/* Background overlay con desenfoque (blur) */}
         <div 
-          className="fixed inset-0 transition-opacity bg-gray-500/50 backdrop-blur-sm" 
+          className="fixed inset-0 transition-opacity bg-slate-900/40 backdrop-blur-md" 
           aria-hidden="true" 
           onClick={onClose}
         ></div>
@@ -44,8 +43,8 @@ export default function FormularioModal({ isOpen, onClose, onSave, itemEdit, fie
         <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
 
         {/* Modal panel */}
-        <div className="relative z-10 inline-block px-4 pt-5 pb-4 overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
-          <div>
+        <div className="inline-block align-bottom bg-white rounded-2xl shadow-2xl text-left overflow-hidden transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full animate-scale-in">
+          <div className="px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
             <h3 className="text-lg font-medium leading-6 text-gray-900" id="modal-title">
               {itemEdit ? `Editar Registro #${itemEdit[Object.keys(itemEdit)[0]]}` : 'Crear Nuevo Registro'}
             </h3>

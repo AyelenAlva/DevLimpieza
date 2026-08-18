@@ -39,10 +39,11 @@ const API_BASE = import.meta.env.PROD
   : 'http://hispaniaimports.com/DEV_Limpieza/api/index.php';
 
 function App() {
-  const [activeTab, setActiveTab] = useState(TABLAS[0].id);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [activeTab, setActiveTab] = useState('ciudad');
+  const [openSection, setOpenSection] = useState('gestion'); // 'parametricas' | 'gestion'
   const [successMsg, setSuccessMsg] = useState(null);
 
   // Estados del modal
@@ -148,11 +149,16 @@ function App() {
           <p className="text-xs font-medium text-gray-400 mt-1 uppercase tracking-wider">Sistema de Gestión</p>
         </div>
         
-        <div className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-widest mt-2">
-          Paramétricas
-        </div>
-        <nav className="flex-1 overflow-y-auto px-4 custom-scrollbar">
-          <ul className="space-y-1.5">
+        <button 
+          onClick={() => setOpenSection(openSection === 'parametricas' ? null : 'parametricas')}
+          className="w-full px-6 py-4 flex justify-between items-center text-xs font-bold text-gray-500 uppercase tracking-widest mt-2 hover:text-white transition-colors"
+        >
+          <span>Paramétricas</span>
+          <svg className={`w-4 h-4 transition-transform ${openSection === 'parametricas' ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+        </button>
+        <div className={`transition-all duration-300 ease-in-out ${openSection === 'parametricas' ? 'flex-1 opacity-100 max-h-[50vh]' : 'max-h-0 opacity-0 overflow-hidden'}`}>
+          <nav className="overflow-y-auto px-4 custom-scrollbar h-full">
+            <ul className="space-y-1.5 pb-4">
             {TABLAS.map(tabla => (
               <li key={tabla.id}>
                 <button
@@ -168,14 +174,20 @@ function App() {
                 </button>
               </li>
             ))}
-          </ul>
-        </nav>
-        
-        <div className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-widest border-t border-gray-700/50 mt-4">
-          Gestión de Personas
+            </ul>
+          </nav>
         </div>
-        <nav className="flex-1 overflow-y-auto px-4 pb-6 custom-scrollbar">
-          <ul className="space-y-1.5">
+        
+        <button 
+          onClick={() => setOpenSection(openSection === 'gestion' ? null : 'gestion')}
+          className="w-full px-6 py-4 flex justify-between items-center text-xs font-bold text-gray-500 uppercase tracking-widest border-t border-gray-700/50 hover:text-white transition-colors"
+        >
+          <span>Gestión de Personas</span>
+          <svg className={`w-4 h-4 transition-transform ${openSection === 'gestion' ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+        </button>
+        <div className={`transition-all duration-300 ease-in-out ${openSection === 'gestion' ? 'flex-1 opacity-100 max-h-[50vh]' : 'max-h-0 opacity-0 overflow-hidden'}`}>
+          <nav className="overflow-y-auto px-4 pb-6 custom-scrollbar h-full">
+            <ul className="space-y-1.5">
             <li>
               <button
                 onClick={() => setActiveTab('alta_cliente')}
@@ -229,7 +241,8 @@ function App() {
               </button>
             </li>
           </ul>
-        </nav>
+          </nav>
+        </div>
       </aside>
 
       {/* Main Content */}
@@ -296,6 +309,11 @@ function App() {
           )}
           </div>
         </div>
+
+        {/* Footer */}
+        <footer className="glass text-center py-3 text-xs text-gray-500 font-medium z-10 border-t border-gray-200 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+          <p>&copy; {new Date().getFullYear()} Sistema de Gestión de Limpieza. Todos los derechos reservados.</p>
+        </footer>
       </main>
 
       {/* Modal form */}
