@@ -14,6 +14,7 @@ require_once 'controllers/ClienteController.php';
 require_once 'controllers/EmpleadoController.php';
 require_once 'controllers/DistribuidoraController.php';
 require_once 'controllers/ParametricasController.php';
+require_once 'controllers/PedidoController.php';
 
 $method = $_SERVER['REQUEST_METHOD'];
 $tabla = $_GET['tabla'] ?? null;
@@ -34,6 +35,10 @@ try {
         $controller = new DistribuidoraController($pdo);
         $controller->handleRequest($method, $id, $data);
     } 
+    elseif ($action === 'pedido') {
+        $controller = new PedidoController($pdo);
+        $controller->handleRequest($method, $id, $data);
+    }
     else {
         $controller = new ParametricasController($pdo);
         $controller->handleRequest($method, $tabla, $action, $data);

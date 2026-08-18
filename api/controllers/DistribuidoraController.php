@@ -42,20 +42,28 @@ class DistribuidoraController {
 
         if ($method === 'PUT') {
             if (!$id) {
-                http_response_code(400); echo json_encode(["error" => "ID_PERSONA es requerido"]); exit;
+                http_response_code(400); echo json_encode(["error" => "ID_DISTRIBUIDORA es requerido"]); exit;
             }
-            $this->pdo->beginTransaction();
             try {
-                $stmt = $this->pdo->prepare("UPDATE PERSONA SET TIPO_PERSONA=?, NOMBRE=?, APELLIDO=?, TELEFONO=?, EMAIL=?, DIRECCION=?, ID_CIUDAD=? WHERE ID_PERSONA=?");
+                $stmt = $this->pdo->prepare("CALL prc_upd_persona_distribuidora(?, ?, ?, ?, ?, ?, ?, ?, @resultado, @mensaje)");
                 $stmt->execute([
-                    $data['tipo_persona'] ?? 'J', $data['nombre'] ?? null, $data['apellido_razon'] ?? $data['apellido'] ?? $data['razon_social'],
-                    $data['telefono'] ?? null, $data['email'] ?? null, $data['direccion'] ?? null, $data['id_ciudad'] ?: null, $id
+                    $id,
+                    $data['tipo_persona'] ?? 'J',
+                    $data['razon_social'] ?? $data['nombre'],
+                    $data['apellido_razon'] ?? null,
+                    $data['telefono'] ?? null,
+                    $data['email'] ?? null,
+                    $data['direccion'] ?? null,
+                    $data['id_ciudad'] ?: null
                 ]);
                 
-                $this->pdo->commit();
-                echo json_encode(["success" => true, "message" => "Registro actualizado correctamente"]);
+                $out = $this->pdo->query("SELECT @resultado AS resultado, @mensaje AS mensaje")->fetch();
+                if ($out['resultado'] == 0) {
+                    echo json_encode(["success" => true, "message" => $out['mensaje']]);
+                } else {
+                    http_response_code(400); echo json_encode(["error" => $out['mensaje']]);
+                }
             } catch(Exception $ex) {
-                $this->pdo->rollBack();
                 http_response_code(500); echo json_encode(["error" => $ex->getMessage()]);
             }
             exit;

@@ -50,6 +50,7 @@ export default function AltaEmpleado({ apiBase }) {
   const handleEdit = (row) => {
     setFormData({
       id_persona: row.ID_PERSONA,
+      id_empleado: row.ID_EMPLEADO,
       tipo_persona: row.TIPO_PERSONA,
       nombre: row.NOMBRE || '',
       apellido: row.APELLIDO || '',
@@ -83,7 +84,7 @@ export default function AltaEmpleado({ apiBase }) {
 
     try {
       if (formData.id_persona) {
-        await axios.put(`${apiBase}?action=crud_empleado&id=${formData.id_persona}`, formData);
+        await axios.put(`${apiBase}?action=crud_empleado&id=${formData.id_empleado}`, formData);
         alert('Empleado actualizado exitosamente.');
       } else {
         const res = await axios.post(`${apiBase}?action=alta_empleado`, formData);

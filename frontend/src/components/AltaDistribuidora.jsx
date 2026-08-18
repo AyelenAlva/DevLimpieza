@@ -50,6 +50,7 @@ export default function AltaDistribuidora({ apiBase }) {
   const handleEdit = (row) => {
     setFormData({
       id_persona: row.ID_PERSONA,
+      id_distribuidora: row.ID_DISTRIBUIDORA,
       razon_social: row.APELLIDO || '',
       telefono: row.TELEFONO || '',
       email: row.EMAIL || '',
@@ -78,7 +79,7 @@ export default function AltaDistribuidora({ apiBase }) {
 
     try {
       if (formData.id_persona) {
-        await axios.put(`${apiBase}?action=crud_distribuidora&id=${formData.id_persona}`, {
+        await axios.put(`${apiBase}?action=crud_distribuidora&id=${formData.id_distribuidora}`, {
           ...formData, tipo_persona: 'J', apellido_razon: formData.razon_social
         });
         alert('Distribuidora actualizada exitosamente.');

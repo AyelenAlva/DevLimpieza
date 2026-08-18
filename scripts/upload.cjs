@@ -43,7 +43,7 @@ async function uploadFiles() {
       await sftp.mkdir(remoteControllersFolder);
     }
 
-    const controllers = ['ClienteController.php', 'EmpleadoController.php', 'DistribuidoraController.php', 'ParametricasController.php'];
+    const controllers = ['ClienteController.php', 'EmpleadoController.php', 'DistribuidoraController.php', 'ParametricasController.php', 'PedidoController.php'];
     for (const file of controllers) {
       console.log(`Subiendo controllers/${file}...`);
       await sftp.fastPut(path.join(localDir, 'controllers', file), remoteControllersFolder + '/' + file);

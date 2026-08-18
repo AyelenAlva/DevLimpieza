@@ -15,7 +15,8 @@ class ParametricasController {
             'tipo_servicio',
             'vw_cliente',
             'vw_empleado',
-            'vw_distribuidora'
+            'vw_distribuidora',
+            'producto'
         ];
     }
 

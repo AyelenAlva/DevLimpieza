@@ -5,6 +5,7 @@ import FormularioModal from './components/FormularioModal';
 import AltaCliente from './components/AltaCliente';
 import AltaEmpleado from './components/AltaEmpleado';
 import AltaDistribuidora from './components/AltaDistribuidora';
+import AltaPedido from './components/AltaPedido';
 
 // Configuración de las tablas paramétricas y los campos de negocio editables en los formularios
 const TABLAS = [
@@ -137,21 +138,32 @@ function App() {
   };
 
   return (
-    <div className="flex h-screen bg-gray-100">
-      
-      {/* Sidebar */}
-      <aside className="w-64 bg-gray-900 text-white flex flex-col">
-        <div className="p-4 bg-gray-800 text-center font-bold text-xl">
+    <div className="flex h-screen bg-gray-50 overflow-hidden font-sans">
+      {/* Sidebar - Modern Glassmorphism */}
+      <aside className="w-72 glass-dark text-gray-300 flex flex-col shadow-2xl relative z-20">
+        <div className="p-6 text-center border-b border-gray-700/50">
+          <h1 className="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300 tracking-tight">
+            LIMPIEZA
+          </h1>
+          <p className="text-xs font-medium text-gray-400 mt-1 uppercase tracking-wider">Sistema de Gestión</p>
+        </div>
+        
+        <div className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-widest mt-2">
           Paramétricas
         </div>
-        <nav className="flex-1 overflow-y-auto mt-4">
-          <ul className="space-y-1">
+        <nav className="flex-1 overflow-y-auto px-4 custom-scrollbar">
+          <ul className="space-y-1.5">
             {TABLAS.map(tabla => (
               <li key={tabla.id}>
                 <button
                   onClick={() => setActiveTab(tabla.id)}
-                  className={`w-full text-left px-4 py-3 hover:bg-gray-700 transition-colors ${activeTab === tabla.id ? 'bg-indigo-600 border-l-4 border-indigo-300' : ''}`}
+                  className={`w-full text-left px-4 py-2.5 rounded-xl transition-all duration-200 flex items-center gap-3 ${
+                    activeTab === tabla.id 
+                      ? 'bg-gradient-to-r from-blue-600/20 to-indigo-600/10 text-blue-400 font-semibold shadow-inner' 
+                      : 'hover:bg-gray-800/50 hover:text-white'
+                  }`}
                 >
+                  <div className={`w-1.5 h-1.5 rounded-full ${activeTab === tabla.id ? 'bg-blue-400' : 'bg-transparent'}`}></div>
                   {tabla.label}
                 </button>
               </li>
@@ -159,33 +171,61 @@ function App() {
           </ul>
         </nav>
         
-        <div className="p-4 bg-gray-800 text-center font-bold text-xl border-t border-gray-700">
+        <div className="px-6 py-4 text-xs font-bold text-gray-500 uppercase tracking-widest border-t border-gray-700/50 mt-4">
           Gestión de Personas
         </div>
-        <nav className="flex-1 overflow-y-auto mt-2">
-          <ul className="space-y-1">
+        <nav className="flex-1 overflow-y-auto px-4 pb-6 custom-scrollbar">
+          <ul className="space-y-1.5">
             <li>
               <button
                 onClick={() => setActiveTab('alta_cliente')}
-                className={`w-full text-left px-4 py-3 hover:bg-gray-700 transition-colors ${activeTab === 'alta_cliente' ? 'bg-indigo-600 border-l-4 border-indigo-300' : ''}`}
+                className={`w-full text-left px-4 py-2.5 rounded-xl transition-all duration-200 flex items-center gap-3 ${
+                  activeTab === 'alta_cliente' 
+                    ? 'bg-gradient-to-r from-blue-600/20 to-indigo-600/10 text-blue-400 font-semibold shadow-inner' 
+                    : 'hover:bg-gray-800/50 hover:text-white'
+                }`}
               >
+                <div className={`w-1.5 h-1.5 rounded-full ${activeTab === 'alta_cliente' ? 'bg-blue-400' : 'bg-transparent'}`}></div>
                 Alta Clientes
               </button>
             </li>
             <li>
               <button
                 onClick={() => setActiveTab('alta_empleado')}
-                className={`w-full text-left px-4 py-3 hover:bg-gray-700 transition-colors ${activeTab === 'alta_empleado' ? 'bg-indigo-600 border-l-4 border-indigo-300' : ''}`}
+                className={`w-full text-left px-4 py-2.5 rounded-xl transition-all duration-200 flex items-center gap-3 ${
+                  activeTab === 'alta_empleado' 
+                    ? 'bg-gradient-to-r from-blue-600/20 to-indigo-600/10 text-blue-400 font-semibold shadow-inner' 
+                    : 'hover:bg-gray-800/50 hover:text-white'
+                }`}
               >
+                <div className={`w-1.5 h-1.5 rounded-full ${activeTab === 'alta_empleado' ? 'bg-blue-400' : 'bg-transparent'}`}></div>
                 Alta Empleados
               </button>
             </li>
             <li>
               <button
                 onClick={() => setActiveTab('alta_distribuidora')}
-                className={`w-full text-left px-4 py-3 hover:bg-gray-700 transition-colors ${activeTab === 'alta_distribuidora' ? 'bg-indigo-600 border-l-4 border-indigo-300' : ''}`}
+                className={`w-full text-left px-4 py-2.5 rounded-xl transition-all duration-200 flex items-center gap-3 ${
+                  activeTab === 'alta_distribuidora' 
+                    ? 'bg-gradient-to-r from-blue-600/20 to-indigo-600/10 text-blue-400 font-semibold shadow-inner' 
+                    : 'hover:bg-gray-800/50 hover:text-white'
+                }`}
               >
+                <div className={`w-1.5 h-1.5 rounded-full ${activeTab === 'alta_distribuidora' ? 'bg-blue-400' : 'bg-transparent'}`}></div>
                 Alta Distribuidoras
+              </button>
+            </li>
+            <li>
+              <button
+                onClick={() => setActiveTab('alta_pedido')}
+                className={`w-full text-left px-4 py-2.5 rounded-xl transition-all duration-200 flex items-center gap-3 ${
+                  activeTab === 'alta_pedido' 
+                    ? 'bg-gradient-to-r from-blue-600/20 to-indigo-600/10 text-blue-400 font-semibold shadow-inner' 
+                    : 'hover:bg-gray-800/50 hover:text-white'
+                }`}
+              >
+                <div className={`w-1.5 h-1.5 rounded-full ${activeTab === 'alta_pedido' ? 'bg-blue-400' : 'bg-transparent'}`}></div>
+                Alta Pedidos
               </button>
             </li>
           </ul>
@@ -193,22 +233,25 @@ function App() {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col overflow-hidden">
+      <main className="flex-1 flex flex-col relative">
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5 pointer-events-none"></div>
         
         {/* Header */}
-        <header className="bg-white shadow px-6 py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-semibold text-gray-800">
+        <header className="glass shadow-sm px-8 py-5 flex justify-between items-center sticky top-0 z-10">
+          <h1 className="text-2xl font-bold text-gray-800 tracking-tight">
             {activeTab === 'alta_cliente' ? 'Alta de Cliente' :
              activeTab === 'alta_empleado' ? 'Alta de Empleado' :
              activeTab === 'alta_distribuidora' ? 'Alta de Distribuidora' :
+             activeTab === 'alta_pedido' ? 'Alta de Pedido' :
              TABLAS.find(t => t.id === activeTab)?.label}
           </h1>
           {!activeTab.startsWith('alta_') && (
             <button
               onClick={handleCreate}
-              className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 shadow flex items-center transition-colors"
+              className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-5 py-2.5 rounded-xl hover:from-blue-700 hover:to-indigo-700 shadow-md hover:shadow-lg flex items-center transition-all font-medium gap-2 animate-scale-in"
             >
-              + Nuevo Registro
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
+              Nuevo Registro
             </button>
           )}
         </header>
@@ -228,13 +271,16 @@ function App() {
         </div>
 
         {/* Table Area */}
-        <div className="flex-1 overflow-y-auto px-6 pb-6">
+        <div className="flex-1 overflow-y-auto px-8 pb-8 pt-4 custom-scrollbar relative z-0">
+          <div className="animate-slide-up h-full">
           {activeTab === 'alta_cliente' ? (
             <AltaCliente apiBase={API_BASE} />
           ) : activeTab === 'alta_empleado' ? (
             <AltaEmpleado apiBase={API_BASE} />
           ) : activeTab === 'alta_distribuidora' ? (
             <AltaDistribuidora apiBase={API_BASE} />
+          ) : activeTab === 'alta_pedido' ? (
+            <AltaPedido apiBase={API_BASE} />
           ) : loading ? (
             <div className="flex justify-center items-center h-full">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
@@ -248,6 +294,7 @@ function App() {
               selectOptions={selectOptions}
             />
           )}
+          </div>
         </div>
       </main>
 

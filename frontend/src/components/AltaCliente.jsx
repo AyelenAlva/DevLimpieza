@@ -58,6 +58,7 @@ export default function AltaCliente({ apiBase }) {
   const handleEdit = (row) => {
     setFormData({
       id_persona: row.ID_PERSONA,
+      id_cliente: row.ID_CLIENTE,
       tipo_persona: row.TIPO_PERSONA,
       nombre: row.NOMBRE || '',
       apellido: row.APELLIDO || '',
@@ -90,7 +91,7 @@ export default function AltaCliente({ apiBase }) {
 
     try {
       if (formData.id_persona) {
-        await axios.put(`${apiBase}?action=crud_cliente&id=${formData.id_persona}`, formData);
+        await axios.put(`${apiBase}?action=crud_cliente&id=${formData.id_cliente}`, formData);
         alert('Cliente actualizado exitosamente.');
       } else {
         const res = await axios.post(`${apiBase}?action=alta_cliente`, formData);
