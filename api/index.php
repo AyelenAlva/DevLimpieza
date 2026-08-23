@@ -10,38 +10,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 require_once 'db.php';
-require_once 'controllers/ClienteController.php';
-require_once 'controllers/EmpleadoController.php';
-require_once 'controllers/DistribuidoraController.php';
-require_once 'controllers/ParametricasController.php';
-require_once 'controllers/PedidoController.php';
+require_once __DIR__ . '/controllers/ParametricasController.php';
+require_once __DIR__ . '/controllers/ClienteController.php';
+require_once __DIR__ . '/controllers/EmpleadoController.php';
+require_once __DIR__ . '/controllers/DistribuidoraController.php';
+require_once __DIR__ . '/controllers/PedidoController.php';
+require_once __DIR__ . '/controllers/RecepcionController.php';
+require_once __DIR__ . '/controllers/FuncionPagoController.php';
 
-$method = $_SERVER['REQUEST_METHOD'];
 $tabla = $_GET['tabla'] ?? null;
 $action = $_GET['action'] ?? null;
 $id = $_GET['id'] ?? null;
+$method = $_SERVER['REQUEST_METHOD'];
 $data = json_decode(file_get_contents("php://input"), true);
 
 try {
-    if (in_array($action, ['crud_cliente', 'alta_cliente'])) {
-        $controller = new ClienteController($pdo);
-        $controller->handleRequest($method, $id, $data);
-    } 
-    elseif (in_array($action, ['crud_empleado', 'alta_empleado'])) {
-        $controller = new EmpleadoController($pdo);
-        $controller->handleRequest($method, $id, $data);
-    } 
-    elseif (in_array($action, ['crud_distribuidora', 'alta_distribuidora'])) {
-        $controller = new DistribuidoraController($pdo);
-        $controller->handleRequest($method, $id, $data);
-    } 
-    elseif ($action === 'pedido') {
-        $controller = new PedidoController($pdo);
-        $controller->handleRequest($method, $id, $data);
-    }
-    else {
-        $controller = new ParametricasController($pdo);
-        $controller->handleRequest($method, $tabla, $action, $data);
+    if ($action === 'crud_cliente' || $action === 'alta_cliente') {
+        (new ClienteController($pdo))->handleRequest($method, $id, $data);
+    } elseif ($action === 'crud_empleado' || $action === 'alta_empleado') {
+        (new EmpleadoController($pdo))->handleRequest($method, $id, $data);
+    } elseif ($action === 'crud_distribuidora' || $action === 'alta_distribuidora') {
+        (new DistribuidoraController($pdo))->handleRequest($method, $id, $data);
+    } elseif ($action === 'pedido') {
+        (new PedidoController($pdo))->handleRequest($method, $id, $data);
+    } elseif ($action === 'recepcion') {
+        (new RecepcionController($pdo))->handleRequest($method, $id, $data);
+    } elseif ($action === 'funcion_pago') {
+        (new FuncionPagoController($pdo))->handleRequest($method, $id, $data);
+    } elseif ($tabla) {
+        (new ParametricasController($pdo))->handleRequest($method, $tabla, $action, $data);
+    } else {
+        http_response_code(400);
+        echo json_encode(["error" => "Acción no válida"]);
     }
 } catch (PDOException $e) {
     http_response_code(500);

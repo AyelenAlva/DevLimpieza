@@ -10,18 +10,30 @@ export default function AltaPedido() {
   const [loading, setLoading] = useState(false);
   const [expandedId, setExpandedId] = useState(null);
   const [detalles, setDetalles] = useState({});
+  const [recepciones, setRecepciones] = useState({});
   const [loadingDetalle, setLoadingDetalle] = useState(false);
 
   // Modal states
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isRecepcionModalOpen, setIsRecepcionModalOpen] = useState(false);
+  
   const [distribuidoras, setDistribuidoras] = useState([]);
   const [productos, setProductos] = useState([]);
+  const [estadosRecepcion, setEstadosRecepcion] = useState([]);
   
-  // Form state
+  // Form state para Pedido
   const [formData, setFormData] = useState({
     id_distribuidora: '',
     observacion: '',
-    items: [] // array of { id_producto, cantidad, costo_unitario }
+    items: [] 
+  });
+
+  // Form state para Recepcion
+  const [recepcionData, setRecepcionData] = useState({
+    id_pedido: '',
+    id_estado_cabecera: '',
+    observaciones: '',
+    detalles: []
   });
 
   useEffect(() => {
@@ -43,12 +55,14 @@ export default function AltaPedido() {
 
   const loadOptions = async () => {
     try {
-      const [resDist, resProd] = await Promise.all([
+      const [resDist, resProd, resEst] = await Promise.all([
         axios.get(`${API_BASE}?tabla=vw_distribuidora`),
-        axios.get(`${API_BASE}?tabla=producto`)
+        axios.get(`${API_BASE}?tabla=producto`),
+        axios.get(`${API_BASE}?tabla=estado`)
       ]);
       setDistribuidoras(resDist.data);
       setProductos(resProd.data);
+      setEstadosRecepcion(resEst.data.filter(e => e.TIPO_ESTADO === 'RECEPCION_STOCK' || e.tipo_estado === 'RECEPCION_STOCK'));
     } catch (err) {
       console.error(err);
     }
@@ -66,6 +80,12 @@ export default function AltaPedido() {
       try {
         const res = await axios.get(`${API_BASE}?action=pedido&id_pedido=${idPedido}`);
         setDetalles(prev => ({ ...prev, [idPedido]: res.data }));
+
+        const p = pedidos.find(x => x.ID_PEDIDO === idPedido);
+        if (p && p.TIENE_RECEPCION) {
+          const resRec = await axios.get(`${API_BASE}?action=recepcion&id_pedido=${idPedido}`);
+          setRecepciones(prev => ({ ...prev, [idPedido]: resRec.data }));
+        }
       } catch (err) {
         console.error("Error al obtener detalle", err);
       } finally {
@@ -79,23 +99,54 @@ export default function AltaPedido() {
     setIsModalOpen(true);
   };
 
-  const handleAddItem = () => {
-    setFormData({
-      ...formData,
-      items: [...formData.items, { id_producto: '', cantidad: 1, costo_unitario: 0 }]
+  const handleOpenRecepcionModal = async (pedido) => {
+    // Buscar detalles del pedido si no los tenemos
+    let det = detalles[pedido.ID_PEDIDO];
+    if (!det) {
+      const res = await axios.get(`${API_BASE}?action=pedido&id_pedido=${pedido.ID_PEDIDO}`);
+      det = res.data;
+      setDetalles(prev => ({ ...prev, [pedido.ID_PEDIDO]: det }));
+    }
+
+    setRecepcionData({
+      id_pedido: pedido.ID_PEDIDO,
+      id_estado_cabecera: '',
+      observaciones: '',
+      detalles: det.map(d => ({
+        id_pedido_det: d.ID_PEDIDO_DET,
+        id_producto: d.ID_PRODUCTO,
+        codigo_producto: d.CODIGO_PRODUCTO,
+        producto_nombre: d.PRODUCTO,
+        cantidad_recibida: d.CANTIDAD_PEDIDA,
+        costo_unitario_real: d.COSTO_UNITARIO
+      }))
     });
+    setIsRecepcionModalOpen(true);
   };
 
-  const handleRemoveItem = (index) => {
-    const newItems = [...formData.items];
-    newItems.splice(index, 1);
-    setFormData({ ...formData, items: newItems });
+  const handleRecepcionItemChange = (index, field, value) => {
+    const newDetalles = [...recepcionData.detalles];
+    newDetalles[index][field] = value;
+    setRecepcionData({ ...recepcionData, detalles: newDetalles });
   };
 
-  const handleItemChange = (index, field, value) => {
-    const newItems = [...formData.items];
-    newItems[index][field] = value;
-    setFormData({ ...formData, items: newItems });
+  const handleSaveRecepcion = async (e) => {
+    e.preventDefault();
+    if (!recepcionData.id_estado_cabecera) return alert("Seleccione el estado de la recepción");
+
+    try {
+      await axios.post(`${API_BASE}?action=recepcion`, recepcionData);
+      setIsRecepcionModalOpen(false);
+      fetchPedidos();
+      // Refrescar el expand si estaba abierto
+      if (expandedId === recepcionData.id_pedido) {
+        setExpandedId(null);
+      }
+      alert('Recepción guardada correctamente');
+    } catch (err) {
+      console.error(err);
+      alert(err.response?.data?.error || "Error al guardar la recepción");
+    }
   };
 
   const handleSave = async (e) => {
@@ -103,12 +154,6 @@ export default function AltaPedido() {
     if (!formData.id_distribuidora) return alert("Seleccione una distribuidora");
     if (formData.items.length === 0) return alert("Agregue al menos un producto");
     
-    for (let item of formData.items) {
-      if (!item.id_producto || item.cantidad <= 0 || item.costo_unitario < 0) {
-        return alert("Revise que todos los productos tengan datos válidos");
-      }
-    }
-
     try {
       await axios.post(`${API_BASE}?action=pedido`, {
         id_distribuidora: formData.id_distribuidora,
@@ -121,6 +166,23 @@ export default function AltaPedido() {
       console.error(err);
       alert("Error al guardar el pedido");
     }
+  };
+
+  const handleAddItem = () => {
+    setFormData({
+      ...formData,
+      items: [...formData.items, { id_producto: '', cantidad: 1, costo_unitario: 0 }]
+    });
+  };
+  const handleRemoveItem = (index) => {
+    const newItems = [...formData.items];
+    newItems.splice(index, 1);
+    setFormData({ ...formData, items: newItems });
+  };
+  const handleItemChange = (index, field, value) => {
+    const newItems = [...formData.items];
+    newItems[index][field] = value;
+    setFormData({ ...formData, items: newItems });
   };
 
   return (
@@ -171,16 +233,28 @@ export default function AltaPedido() {
                       <td className="px-6 py-4 font-medium text-gray-900">#{p.ID_PEDIDO}</td>
                       <td className="px-6 py-4">{p.DISTRIBUIDORA}</td>
                       <td className="px-6 py-4">
-                        <span className="px-2.5 py-1 bg-blue-50 text-blue-700 text-xs font-medium rounded-full">
+                        <span className={`px-2.5 py-1 text-xs font-medium rounded-full ${p.ESTADO_PEDIDO === 'COMPLETA' ? 'bg-green-50 text-green-700' : 'bg-blue-50 text-blue-700'}`}>
                           {p.ESTADO_PEDIDO || p.CODIGO}
                         </span>
                       </td>
                       <td className="px-6 py-4">{p.FECHA_PEDIDO}</td>
                       <td className="px-6 py-4 text-gray-500 truncate max-w-xs">{p.OBSERVACION}</td>
                       <td className="px-6 py-4">
-                        <button className="text-gray-400 hover:text-green-600 transition-colors" title="Recepción">
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
-                        </button>
+                        {!p.TIENE_RECEPCION ? (
+                          <button 
+                            onClick={() => handleOpenRecepcionModal(p)}
+                            className="text-gray-400 hover:text-green-600 transition-colors flex items-center gap-1 bg-green-50 px-3 py-1 rounded-full text-xs font-semibold hover:bg-green-100" 
+                            title="Registrar Recepción"
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                            Recibir
+                          </button>
+                        ) : (
+                          <span className="text-green-600 font-bold text-xs flex items-center gap-1">
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                            RECIBIDO
+                          </span>
+                        )}
                       </td>
                     </tr>
                     
@@ -189,6 +263,8 @@ export default function AltaPedido() {
                       <tr className="bg-gray-50/50">
                         <td colSpan="7" className="p-0 border-b border-gray-200">
                           <div className="p-6 pl-16 border-l-4 border-blue-500">
+                            
+                            {/* DETALLE PEDIDO */}
                             <h4 className="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
                               <svg className="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
                               Detalle del Pedido #{p.ID_PEDIDO}
@@ -196,7 +272,7 @@ export default function AltaPedido() {
                             {loadingDetalle && !detalles[p.ID_PEDIDO] ? (
                               <p className="text-sm text-gray-500">Cargando productos...</p>
                             ) : (
-                              <table className="w-full text-sm bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+                              <table className="w-full text-sm bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden mb-6">
                                 <thead className="bg-gray-100/50 text-gray-600 text-xs uppercase">
                                   <tr>
                                     <th className="px-4 py-3">Cód.</th>
@@ -207,31 +283,53 @@ export default function AltaPedido() {
                                   </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-100">
-                                  {detalles[p.ID_PEDIDO]?.length > 0 ? (
-                                    detalles[p.ID_PEDIDO].map(d => (
-                                      <tr key={d.ID_PEDIDO_DET} className="hover:bg-gray-50/80">
-                                        <td className="px-4 py-3 text-gray-500">{d.CODIGO_PRODUCTO}</td>
-                                        <td className="px-4 py-3 font-medium text-gray-800">{d.PRODUCTO}</td>
-                                        <td className="px-4 py-3 text-right">{d.CANTIDAD_PEDIDA} {d.UNIDAD_MEDIDA}</td>
-                                        <td className="px-4 py-3 text-right">${parseFloat(d.COSTO_UNITARIO).toFixed(2)}</td>
-                                        <td className="px-4 py-3 text-right font-medium text-blue-700">${parseFloat(d.SUBTOTAL_LINEA).toFixed(2)}</td>
-                                      </tr>
-                                    ))
-                                  ) : (
-                                    <tr>
-                                      <td colSpan="5" className="px-4 py-6 text-center text-gray-500">No hay productos en este pedido</td>
+                                  {detalles[p.ID_PEDIDO]?.map(d => (
+                                    <tr key={d.ID_PEDIDO_DET} className="hover:bg-gray-50/80">
+                                      <td className="px-4 py-3 text-gray-500">{d.CODIGO_PRODUCTO}</td>
+                                      <td className="px-4 py-3 font-medium text-gray-800">{d.PRODUCTO}</td>
+                                      <td className="px-4 py-3 text-right">{d.CANTIDAD_PEDIDA} {d.UNIDAD_MEDIDA}</td>
+                                      <td className="px-4 py-3 text-right">${parseFloat(d.COSTO_UNITARIO).toFixed(2)}</td>
+                                      <td className="px-4 py-3 text-right font-medium text-blue-700">${parseFloat(d.SUBTOTAL_LINEA).toFixed(2)}</td>
                                     </tr>
-                                  )}
-                                  {detalles[p.ID_PEDIDO]?.length > 0 && (
-                                    <tr className="bg-blue-50/30">
-                                      <td colSpan="4" className="px-4 py-3 text-right font-semibold text-gray-700">Total:</td>
-                                      <td className="px-4 py-3 text-right font-bold text-blue-800">
-                                        ${detalles[p.ID_PEDIDO].reduce((sum, item) => sum + parseFloat(item.SUBTOTAL_LINEA), 0).toFixed(2)}
-                                      </td>
-                                    </tr>
-                                  )}
+                                  ))}
                                 </tbody>
                               </table>
+                            )}
+
+                            {/* DETALLE RECEPCION (SI TIENE) */}
+                            {p.TIENE_RECEPCION && recepciones[p.ID_PEDIDO] && (
+                              <>
+                                <h4 className="text-sm font-semibold text-green-700 mb-3 flex items-center gap-2 mt-4">
+                                  <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                                  Resultados de la Recepción
+                                </h4>
+                                <table className="w-full text-sm bg-white rounded-lg shadow-sm border border-green-100 overflow-hidden">
+                                  <thead className="bg-green-50 text-green-800 text-xs uppercase">
+                                    <tr>
+                                      <th className="px-4 py-3">Producto Pedido</th>
+                                      <th className="px-4 py-3">Producto Recibido</th>
+                                      <th className="px-4 py-3 text-right">Cant. Pedida</th>
+                                      <th className="px-4 py-3 text-right">Cant. Recibida</th>
+                                      <th className="px-4 py-3 text-right">Costo Real</th>
+                                      <th className="px-4 py-3 text-center">Estado</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody className="divide-y divide-gray-100">
+                                    {recepciones[p.ID_PEDIDO].map((r, idx) => (
+                                      <tr key={idx} className="hover:bg-gray-50/80">
+                                        <td className="px-4 py-3 font-medium text-gray-600">{r.DESCRIPCION_PRODUCTO_PEDIDO}</td>
+                                        <td className="px-4 py-3 font-medium text-green-700">{r.DESCRIPCION_PRODUCTO_RECIBIDO}</td>
+                                        <td className="px-4 py-3 text-right text-gray-500">{r.CANTIDAD_PEDIDA}</td>
+                                        <td className="px-4 py-3 text-right font-bold text-gray-800">{r.CANTIDAD_RECIBIDA}</td>
+                                        <td className="px-4 py-3 text-right font-bold text-green-700">${parseFloat(r.COSTO_CAMBIO || 0).toFixed(2)}</td>
+                                        <td className="px-4 py-3 text-center">
+                                          <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-lg">{r.ESTADO_DETALLE_RECEPCION}</span>
+                                        </td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </>
                             )}
                           </div>
                         </td>
@@ -239,31 +337,25 @@ export default function AltaPedido() {
                     )}
                   </React.Fragment>
                 ))}
-                {pedidos.length === 0 && !loading && (
-                  <tr>
-                    <td colSpan="7" className="px-6 py-8 text-center text-gray-500">No hay pedidos registrados</td>
-                  </tr>
-                )}
               </tbody>
             </table>
           </div>
         )}
       </div>
 
+      {/* MODAL NUEVO PEDIDO */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-md flex items-center justify-center p-4 z-50 transition-all duration-300">
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col animate-scale-in border border-gray-100">
             <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/50 rounded-t-2xl">
               <h3 className="text-xl font-bold text-gray-800">Alta de Pedido de Stock</h3>
               <button onClick={() => setIsModalOpen(false)} className="text-gray-400 hover:text-gray-600 transition-colors">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                ✕
               </button>
             </div>
             
             <div className="p-6 overflow-y-auto flex-1">
               <form id="pedidoForm" onSubmit={handleSave} className="space-y-6">
-                
-                {/* Cabecera */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-gray-50 p-5 rounded-xl border border-gray-100">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1.5">Distribuidora *</label>
@@ -271,7 +363,7 @@ export default function AltaPedido() {
                       required
                       value={formData.id_distribuidora}
                       onChange={e => setFormData({...formData, id_distribuidora: e.target.value})}
-                      className="w-full rounded-xl border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2.5 bg-white border"
+                      className="w-full rounded-xl border-gray-300 p-2.5 border"
                     >
                       <option value="">Seleccione una distribuidora</option>
                       {distribuidoras.map(d => (
@@ -287,107 +379,150 @@ export default function AltaPedido() {
                       type="text"
                       value={formData.observacion}
                       onChange={e => setFormData({...formData, observacion: e.target.value})}
-                      className="w-full rounded-xl border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2.5 border"
-                      placeholder="Ej. Pedido urgente..."
+                      className="w-full rounded-xl border-gray-300 p-2.5 border"
                     />
                   </div>
                 </div>
 
-                {/* Detalle */}
                 <div>
                   <div className="flex justify-between items-center mb-4">
                     <h4 className="text-lg font-bold text-gray-800">Productos a Comprar</h4>
-                    <button 
-                      type="button" 
-                      onClick={handleAddItem}
-                      className="text-sm flex items-center gap-1.5 bg-blue-50 text-blue-700 px-3 py-1.5 rounded-lg hover:bg-blue-100 font-medium transition-colors border border-blue-100"
-                    >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
-                      Añadir Producto
-                    </button>
+                    <button type="button" onClick={handleAddItem} className="bg-blue-50 text-blue-700 px-3 py-1.5 rounded-lg border border-blue-100">Añadir Producto</button>
                   </div>
 
                   <div className="space-y-3">
                     {formData.items.map((item, index) => (
-                      <div key={index} className="flex flex-wrap md:flex-nowrap gap-3 items-end bg-white p-3 rounded-xl border border-gray-200 shadow-sm relative group">
-                        <div className="flex-1 min-w-[200px]">
-                          <label className="block text-xs font-medium text-gray-500 mb-1">Producto</label>
-                          <select 
-                            required
-                            value={item.id_producto}
-                            onChange={e => handleItemChange(index, 'id_producto', e.target.value)}
-                            className="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 text-sm border"
-                          >
-                            <option value="">Seleccionar...</option>
-                            {productos.map(p => (
-                              <option key={p.ID_PRODUCTO} value={p.ID_PRODUCTO}>
-                                {p.CODIGO_PRODUCTO} - {p.DESCRIPCION}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                        <div className="w-24">
-                          <label className="block text-xs font-medium text-gray-500 mb-1">Cantidad</label>
-                          <input 
-                            type="number"
-                            min="1"
-                            required
-                            value={item.cantidad}
-                            onChange={e => handleItemChange(index, 'cantidad', parseFloat(e.target.value))}
-                            className="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 text-sm border text-right"
-                          />
-                        </div>
-                        <div className="w-32">
-                          <label className="block text-xs font-medium text-gray-500 mb-1">Costo Unit. ($)</label>
-                          <input 
-                            type="number"
-                            step="0.01"
-                            min="0"
-                            required
-                            value={item.costo_unitario}
-                            onChange={e => handleItemChange(index, 'costo_unitario', parseFloat(e.target.value))}
-                            className="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 text-sm border text-right"
-                          />
-                        </div>
-                        <div className="w-32 pb-2 text-right">
-                          <div className="text-xs font-medium text-gray-500 mb-1">Subtotal</div>
-                          <div className="font-bold text-gray-800">${(item.cantidad * item.costo_unitario).toFixed(2)}</div>
-                        </div>
-                        <button 
-                          type="button" 
-                          onClick={() => handleRemoveItem(index)}
-                          className="w-8 h-8 flex items-center justify-center text-red-500 hover:bg-red-50 rounded-lg transition-colors border border-transparent hover:border-red-100"
-                          title="Quitar"
-                        >
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                        </button>
+                      <div key={index} className="flex gap-3 bg-white p-3 rounded-xl border border-gray-200">
+                        <select required value={item.id_producto} onChange={e => handleItemChange(index, 'id_producto', e.target.value)} className="flex-1 border p-2 rounded-lg">
+                          <option value="">Seleccionar...</option>
+                          {productos.map(p => (
+                            <option key={p.ID_PRODUCTO} value={p.ID_PRODUCTO}>{p.CODIGO_PRODUCTO} - {p.DESCRIPCION}</option>
+                          ))}
+                        </select>
+                        <input type="number" min="1" required value={item.cantidad} onChange={e => handleItemChange(index, 'cantidad', parseFloat(e.target.value))} className="w-24 border p-2 rounded-lg text-right" placeholder="Cant." />
+                        <input type="number" step="0.01" min="0" required value={item.costo_unitario} onChange={e => handleItemChange(index, 'costo_unitario', parseFloat(e.target.value))} className="w-32 border p-2 rounded-lg text-right" placeholder="Costo" />
+                        <button type="button" onClick={() => handleRemoveItem(index)} className="w-10 text-red-500">✕</button>
                       </div>
                     ))}
-                    {formData.items.length === 0 && (
-                      <div className="text-center p-8 bg-gray-50/50 rounded-xl border border-dashed border-gray-300 text-gray-500">
-                        No hay productos en este pedido. Haga clic en "Añadir Producto".
-                      </div>
-                    )}
                   </div>
                 </div>
               </form>
             </div>
             
             <div className="p-5 border-t border-gray-100 bg-gray-50/80 rounded-b-2xl flex justify-end gap-3">
-              <button 
-                type="button" 
-                onClick={() => setIsModalOpen(false)}
-                className="px-5 py-2.5 rounded-xl border border-gray-300 text-gray-700 hover:bg-gray-100 font-medium transition-colors"
-              >
-                Cancelar
-              </button>
-              <button 
-                type="submit" 
-                form="pedidoForm"
-                className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 text-white font-medium shadow-md hover:shadow-lg transition-all"
-              >
-                Guardar Pedido
-              </button>
+              <button type="button" onClick={() => setIsModalOpen(false)} className="px-5 py-2.5 rounded-xl border border-gray-300">Cancelar</button>
+              <button type="submit" form="pedidoForm" className="px-5 py-2.5 rounded-xl bg-blue-600 text-white font-medium">Guardar Pedido</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL RECEPCION */}
+      {isRecepcionModalOpen && (
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-4 z-50 transition-all duration-300">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-5xl max-h-[90vh] flex flex-col animate-scale-in border border-gray-100">
+            <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-green-50 rounded-t-2xl">
+              <h3 className="text-xl font-bold text-green-800 flex items-center gap-2">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                Recepción del Pedido #{recepcionData.id_pedido}
+              </h3>
+              <button onClick={() => setIsRecepcionModalOpen(false)} className="text-gray-400 hover:text-gray-600">✕</button>
+            </div>
+            
+            <div className="p-6 overflow-y-auto flex-1 bg-gray-50">
+              <form id="recepcionForm" onSubmit={handleSaveRecepcion} className="space-y-6">
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Estado de Recepción *</label>
+                    <select 
+                      required
+                      value={recepcionData.id_estado_cabecera}
+                      onChange={e => setRecepcionData({...recepcionData, id_estado_cabecera: e.target.value})}
+                      className="w-full rounded-xl border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 p-2.5 border"
+                    >
+                      <option value="">Seleccione estado...</option>
+                      {estadosRecepcion.map(e => (
+                        <option key={e.ID_ESTADO} value={e.ID_ESTADO}>{e.DESCRIPCION}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Observaciones</label>
+                    <input 
+                      type="text"
+                      value={recepcionData.observaciones}
+                      onChange={e => setRecepcionData({...recepcionData, observaciones: e.target.value})}
+                      className="w-full rounded-xl border-gray-300 shadow-sm p-2.5 border"
+                      placeholder="Faltó mercancía, cajas rotas..."
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <h4 className="text-lg font-bold text-gray-800 mb-3">Detalle de Recepción</h4>
+                  <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                    <table className="w-full text-sm text-left">
+                      <thead className="bg-gray-50 text-gray-600 font-medium">
+                        <tr>
+                          <th className="px-4 py-3">Producto Pedido</th>
+                          <th className="px-4 py-3">Producto Ingresado</th>
+                          <th className="px-4 py-3 text-right">Cant. Recibida</th>
+                          <th className="px-4 py-3 text-right">Costo Real ($)</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gray-100">
+                        {recepcionData.detalles.map((det, index) => (
+                          <tr key={index} className="hover:bg-gray-50/50">
+                            <td className="px-4 py-3 text-gray-500 text-xs">
+                              <span className="block font-medium">{det.codigo_producto}</span>
+                              {det.producto_nombre}
+                            </td>
+                            <td className="px-4 py-3">
+                              <select 
+                                required
+                                value={det.id_producto}
+                                onChange={e => handleRecepcionItemChange(index, 'id_producto', e.target.value)}
+                                className="w-full border-gray-300 rounded-lg p-2 text-sm border"
+                              >
+                                {productos.map(p => (
+                                  <option key={p.ID_PRODUCTO} value={p.ID_PRODUCTO}>{p.CODIGO_PRODUCTO} - {p.DESCRIPCION}</option>
+                                ))}
+                              </select>
+                            </td>
+                            <td className="px-4 py-3 w-32">
+                              <input 
+                                type="number" 
+                                min="0" 
+                                required
+                                value={det.cantidad_recibida}
+                                onChange={e => handleRecepcionItemChange(index, 'cantidad_recibida', parseFloat(e.target.value))}
+                                className="w-full border border-gray-300 rounded-lg p-2 text-right text-sm"
+                              />
+                            </td>
+                            <td className="px-4 py-3 w-32">
+                              <input 
+                                type="number" 
+                                step="0.01" 
+                                min="0" 
+                                required
+                                value={det.costo_unitario_real}
+                                onChange={e => handleRecepcionItemChange(index, 'costo_unitario_real', parseFloat(e.target.value))}
+                                className="w-full border border-gray-300 rounded-lg p-2 text-right text-sm"
+                              />
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </form>
+            </div>
+            
+            <div className="p-5 border-t border-gray-100 bg-white rounded-b-2xl flex justify-end gap-3 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+              <button type="button" onClick={() => setIsRecepcionModalOpen(false)} className="px-5 py-2.5 rounded-xl border border-gray-300 font-medium">Cancelar</button>
+              <button type="submit" form="recepcionForm" className="px-5 py-2.5 rounded-xl bg-green-600 text-white font-medium shadow-md hover:bg-green-700">Confirmar Recepción</button>
             </div>
           </div>
         </div>

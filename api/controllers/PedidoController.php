@@ -47,7 +47,8 @@ class PedidoController {
                             e.DESCRIPCION                AS ESTADO_PEDIDO,
                             p.FECHA_PEDIDO,
                             p.FECHA_RECEPCION,
-                            p.OBSERVACION
+                            p.OBSERVACION,
+                            (SELECT COUNT(*) FROM RECEPCION_CAB r WHERE r.ID_PEDIDO = p.ID_PEDIDO) > 0 AS TIENE_RECEPCION
                         FROM PEDIDO_CAB p
                         JOIN DISTRIBUIDORA d
                             ON d.ID_DISTRIBUIDORA = p.ID_DISTRIBUIDORA

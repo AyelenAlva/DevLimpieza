@@ -6,6 +6,7 @@ import AltaCliente from './components/AltaCliente';
 import AltaEmpleado from './components/AltaEmpleado';
 import AltaDistribuidora from './components/AltaDistribuidora';
 import AltaPedido from './components/AltaPedido';
+import AltaFuncionPago from './components/AltaFuncionPago';
 
 // Configuración de las tablas paramétricas y los campos de negocio editables en los formularios
 const TABLAS = [
@@ -239,6 +240,18 @@ function App() {
                 <div className={`w-1.5 h-1.5 rounded-full ${activeTab === 'alta_pedido' ? 'bg-blue-400' : 'bg-transparent'}`}></div>
                 Alta Pedidos
               </button>
+            <li>
+              <button
+                onClick={() => setActiveTab('funcion_pago')}
+                className={`w-full text-left px-3 py-2 rounded-lg transition-all duration-200 flex items-center gap-3 text-sm ${
+                  activeTab === 'funcion_pago' 
+                    ? 'bg-blue-600/20 text-blue-400 font-semibold' 
+                    : 'hover:bg-gray-800/80 hover:text-white'
+                }`}
+              >
+                <div className={`w-1.5 h-1.5 rounded-full ${activeTab === 'funcion_pago' ? 'bg-blue-400' : 'bg-transparent'}`}></div>
+                Pago por Función
+              </button>
             </li>
           </ul>
           </nav>
@@ -256,9 +269,10 @@ function App() {
              activeTab === 'alta_empleado' ? 'Alta de Empleado' :
              activeTab === 'alta_distribuidora' ? 'Alta de Distribuidora' :
              activeTab === 'alta_pedido' ? 'Alta de Pedido' :
+             activeTab === 'funcion_pago' ? 'Pago por Función' :
              TABLAS.find(t => t.id === activeTab)?.label}
           </h1>
-          {!activeTab.startsWith('alta_') && (
+          {!activeTab.startsWith('alta_') && activeTab !== 'funcion_pago' && (
             <button
               onClick={handleCreate}
               className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-5 py-2.5 rounded-xl hover:from-blue-700 hover:to-indigo-700 shadow-md hover:shadow-lg flex items-center transition-all font-medium gap-2 animate-scale-in"
@@ -294,6 +308,8 @@ function App() {
             <AltaDistribuidora apiBase={API_BASE} />
           ) : activeTab === 'alta_pedido' ? (
             <AltaPedido apiBase={API_BASE} />
+          ) : activeTab === 'funcion_pago' ? (
+            <AltaFuncionPago apiBase={API_BASE} />
           ) : loading ? (
             <div className="flex justify-center items-center h-full">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
