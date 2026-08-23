@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import axios from 'axios';
 import Select from 'react-select';
 
@@ -167,8 +168,8 @@ export default function AltaDistribuidora({ apiBase }) {
         )}
       </div>
 
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-gray-900/60 backdrop-filter backdrop-blur-sm flex items-center justify-center z-50 transition-all duration-300">
+      {isModalOpen && createPortal(
+        <div className="fixed inset-0 bg-gray-900/60 backdrop-filter backdrop-blur-sm flex items-center justify-center z-[100] transition-all duration-300">
           <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-2xl max-h-[90vh] overflow-y-auto animate-scale-in">
             <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center bg-gray-50">
               <h3 className="text-lg font-medium text-gray-900">{formData.id_persona ? 'Editar Distribuidora' : 'Alta de Nueva Distribuidora'}</h3>
@@ -220,7 +221,7 @@ export default function AltaDistribuidora({ apiBase }) {
             </div>
           </div>
         </div>
-      )}
+      , document.body)}
     </div>
   );
 }

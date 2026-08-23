@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import axios from 'axios';
 import Select from 'react-select';
 
@@ -181,8 +182,8 @@ export default function AltaCliente({ apiBase }) {
         )}
       </div>
 
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-gray-900/60 backdrop-filter backdrop-blur-sm flex items-center justify-center z-50 transition-all duration-300">
+      {isModalOpen && createPortal(
+        <div className="fixed inset-0 bg-gray-900/60 backdrop-filter backdrop-blur-sm flex items-center justify-center z-[100] transition-all duration-300">
           <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-2xl max-h-[90vh] overflow-y-auto animate-scale-in">
             <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center bg-gray-50">
               <h3 className="text-lg font-medium text-gray-900">{formData.id_persona ? 'Editar Cliente' : 'Alta de Nuevo Cliente'}</h3>
@@ -193,30 +194,36 @@ export default function AltaCliente({ apiBase }) {
               {message && <div className="p-4 mb-4 rounded bg-red-100 text-red-800">{message.text}</div>}
               
               <form id="form-cliente" onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Tipo de Persona *</label>
-                  <select name="tipo_persona" value={formData.tipo_persona} onChange={handleChange} className="mt-1 block w-full p-2 border border-gray-300 rounded" required>
-                    <option value="F">Física</option>
-                    <option value="J">Jurídica</option>
-                  </select>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Tipo de Persona *</label>
+                    <select name="tipo_persona" value={formData.tipo_persona} onChange={handleChange} className="mt-1 block w-full p-2 border border-gray-300 rounded" required>
+                      <option value="F">Física</option>
+                      <option value="J">Jurídica</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Nombre / Razón Social *</label>
+                    <input type="text" name="nombre" value={formData.nombre} onChange={handleChange} className="mt-1 block w-full p-2 border border-gray-300 rounded" required />
+                  </div>
                 </div>
+                
                 {formData.tipo_persona === 'F' && (
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">Nombre *</label>
-                    <input type="text" name="nombre" value={formData.nombre} onChange={handleChange} className="mt-1 block w-full p-2 border border-gray-300 rounded" required={formData.tipo_persona === 'F'} />
+                    <label className="block text-sm font-medium text-gray-700">Apellido *</label>
+                    <input type="text" name="apellido" value={formData.apellido} onChange={handleChange} className="mt-1 block w-full p-2 border border-gray-300 rounded" required />
                   </div>
                 )}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">{formData.tipo_persona === 'F' ? 'Apellido *' : 'Razón Social *'}</label>
-                  <input type="text" name="apellido" value={formData.apellido} onChange={handleChange} className="mt-1 block w-full p-2 border border-gray-300 rounded" required />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Teléfono *</label>
-                  <input type="text" name="telefono" value={formData.telefono} onChange={handleChange} className="mt-1 block w-full p-2 border border-gray-300 rounded" required />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Email</label>
-                  <input type="email" name="email" value={formData.email} onChange={handleChange} className="mt-1 block w-full p-2 border border-gray-300 rounded" />
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Teléfono</label>
+                    <input type="text" name="telefono" value={formData.telefono} onChange={handleChange} className="mt-1 block w-full p-2 border border-gray-300 rounded" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Email</label>
+                    <input type="email" name="email" value={formData.email} onChange={handleChange} className="mt-1 block w-full p-2 border border-gray-300 rounded" />
+                  </div>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Dirección</label>
@@ -271,7 +278,7 @@ export default function AltaCliente({ apiBase }) {
             </div>
           </div>
         </div>
-      )}
+      , document.body)}
     </div>
   );
 }

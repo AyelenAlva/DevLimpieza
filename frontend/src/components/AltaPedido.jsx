@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
+import { createPortal } from 'react-dom';
 import axios from 'axios';
 import Select from 'react-select';
 
@@ -366,8 +367,8 @@ export default function AltaPedido({ apiBase, setError, showSuccess }) {
       </div>
 
       {/* MODAL NUEVO PEDIDO */}
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-gray-900/60 backdrop-filter backdrop-blur-sm flex items-center justify-center p-4 z-50 transition-all duration-300">
+      {isModalOpen && createPortal(
+        <div className="fixed inset-0 bg-gray-900/60 backdrop-filter backdrop-blur-sm flex items-center justify-center p-4 z-[100] transition-all duration-300">
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col animate-scale-in border border-gray-100">
             <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/50 rounded-t-2xl">
               <h3 className="text-xl font-bold text-gray-800">Alta de Pedido de Stock</h3>
@@ -438,11 +439,11 @@ export default function AltaPedido({ apiBase, setError, showSuccess }) {
             </div>
           </div>
         </div>
-      )}
+      , document.body)}
 
       {/* MODAL RECEPCION */}
-      {isRecepcionModalOpen && (
-        <div className="fixed inset-0 bg-gray-900/60 backdrop-filter backdrop-blur-sm flex items-center justify-center p-4 z-50 transition-all duration-300">
+      {isRecepcionModalOpen && createPortal(
+        <div className="fixed inset-0 bg-gray-900/60 backdrop-filter backdrop-blur-sm flex items-center justify-center p-4 z-[100] transition-all duration-300">
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-5xl max-h-[90vh] flex flex-col animate-scale-in border border-gray-100">
             <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-green-50 rounded-t-2xl">
               <h3 className="text-xl font-bold text-green-800 flex items-center gap-2">
@@ -548,7 +549,7 @@ export default function AltaPedido({ apiBase, setError, showSuccess }) {
             </div>
           </div>
         </div>
-      )}
+      , document.body)}
     </div>
   );
 }
