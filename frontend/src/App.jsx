@@ -240,6 +240,7 @@ function App() {
                 <div className={`w-1.5 h-1.5 rounded-full ${activeTab === 'alta_pedido' ? 'bg-blue-400' : 'bg-transparent'}`}></div>
                 Alta Pedidos
               </button>
+            </li>
             <li>
               <button
                 onClick={() => setActiveTab('funcion_pago')}
