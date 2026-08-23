@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Select from 'react-select';
 
 const API_BASE = import.meta.env.PROD 
   ? '../api/index.php' 
@@ -360,19 +361,15 @@ export default function AltaPedido({ apiBase, setError, showSuccess }) {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-gray-50 p-5 rounded-xl border border-gray-100">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1.5">Distribuidora *</label>
-                    <select 
-                      required
-                      value={formData.id_distribuidora}
-                      onChange={e => setFormData({...formData, id_distribuidora: e.target.value})}
-                      className="w-full rounded-xl border-gray-300 p-2.5 border"
-                    >
-                      <option value="">Seleccione una distribuidora</option>
-                      {distribuidoras.map(d => (
-                        <option key={d.ID_DISTRIBUIDORA} value={d.ID_DISTRIBUIDORA}>
-                          {d.ID_DISTRIBUIDORA} - {d.DESCRIPCION || d.ID_PERSONA}
-                        </option>
-                      ))}
-                    </select>
+                    <Select
+                      options={distribuidoras.map(d => ({ value: d.ID_DISTRIBUIDORA, label: `${d.ID_DISTRIBUIDORA} - ${d.DISTRIBUIDORA}` }))}
+                      value={distribuidoras.map(d => ({ value: d.ID_DISTRIBUIDORA, label: `${d.ID_DISTRIBUIDORA} - ${d.DISTRIBUIDORA}` })).find(o => o.value === formData.id_distribuidora) || null}
+                      onChange={opt => setFormData({...formData, id_distribuidora: opt ? opt.value : ''})}
+                      placeholder="Buscar distribuidora..."
+                      isClearable
+                      className="react-select-container"
+                      classNamePrefix="react-select"
+                    />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1.5">Observación</label>
@@ -394,12 +391,17 @@ export default function AltaPedido({ apiBase, setError, showSuccess }) {
                   <div className="space-y-3">
                     {formData.items.map((item, index) => (
                       <div key={index} className="flex gap-3 bg-white p-3 rounded-xl border border-gray-200">
-                        <select required value={item.id_producto} onChange={e => handleItemChange(index, 'id_producto', e.target.value)} className="flex-1 border p-2 rounded-lg">
-                          <option value="">Seleccionar...</option>
-                          {productos.map(p => (
-                            <option key={p.ID_PRODUCTO} value={p.ID_PRODUCTO}>{p.CODIGO_PRODUCTO} - {p.DESCRIPCION}</option>
-                          ))}
-                        </select>
+                        <div className="flex-1">
+                          <Select
+                            options={productos.map(p => ({ value: p.ID_PRODUCTO, label: p.CODIGO_PRODUCTO ? `${p.CODIGO_PRODUCTO} - ${p.DESCRIPCION}` : p.DESCRIPCION }))}
+                            value={productos.map(p => ({ value: p.ID_PRODUCTO, label: p.CODIGO_PRODUCTO ? `${p.CODIGO_PRODUCTO} - ${p.DESCRIPCION}` : p.DESCRIPCION })).find(o => o.value === item.id_producto) || null}
+                            onChange={opt => handleItemChange(index, 'id_producto', opt ? opt.value : '')}
+                            placeholder="Buscar producto..."
+                            isClearable
+                            menuPortalTarget={document.body}
+                            styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
+                          />
+                        </div>
                         <input type="number" min="1" required value={item.cantidad} onChange={e => handleItemChange(index, 'cantidad', parseFloat(e.target.value))} className="w-24 border p-2 rounded-lg text-right" placeholder="Cant." />
                         <input type="number" step="0.01" min="0" required value={item.costo_unitario} onChange={e => handleItemChange(index, 'costo_unitario', parseFloat(e.target.value))} className="w-32 border p-2 rounded-lg text-right" placeholder="Costo" />
                         <button type="button" onClick={() => handleRemoveItem(index)} className="w-10 text-red-500">✕</button>
@@ -480,16 +482,15 @@ export default function AltaPedido({ apiBase, setError, showSuccess }) {
                               {det.producto_nombre}
                             </td>
                             <td className="px-4 py-3">
-                              <select 
-                                required
-                                value={det.id_producto}
-                                onChange={e => handleRecepcionItemChange(index, 'id_producto', e.target.value)}
-                                className="w-full border-gray-300 rounded-lg p-2 text-sm border"
-                              >
-                                {productos.map(p => (
-                                  <option key={p.ID_PRODUCTO} value={p.ID_PRODUCTO}>{p.CODIGO_PRODUCTO} - {p.DESCRIPCION}</option>
-                                ))}
-                              </select>
+                              <Select
+                                options={productos.map(p => ({ value: p.ID_PRODUCTO, label: p.CODIGO_PRODUCTO ? `${p.CODIGO_PRODUCTO} - ${p.DESCRIPCION}` : p.DESCRIPCION }))}
+                                value={productos.map(p => ({ value: p.ID_PRODUCTO, label: p.CODIGO_PRODUCTO ? `${p.CODIGO_PRODUCTO} - ${p.DESCRIPCION}` : p.DESCRIPCION })).find(o => o.value === det.id_producto) || null}
+                                onChange={opt => handleRecepcionItemChange(index, 'id_producto', opt ? opt.value : '')}
+                                placeholder="Buscar..."
+                                isClearable
+                                menuPortalTarget={document.body}
+                                styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
+                              />
                             </td>
                             <td className="px-4 py-3 w-32">
                               <input 
