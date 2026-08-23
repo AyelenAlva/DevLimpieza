@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Select from 'react-select';
 
 const API_BASE = 'http://localhost:3000/api';
 
@@ -59,21 +60,23 @@ export default function FormularioModal({ isOpen, onClose, onSave, itemEdit, fie
                       </label>
 
                       {field.type === 'select' ? (
-                        <select
-                          name={field.name}
-                          id={field.name}
-                          value={formData[field.name] || ''}
-                          onChange={handleChange}
-                          className="block w-full px-3 py-2 mt-1 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                          required
-                        >
-                          <option value="" disabled>Selecciona una opción</option>
-                          {(selectOptions[field.name] || []).map(opt => (
-                            <option key={opt.id || opt.ID_ESTADO_USA} value={opt.id || opt.ID_ESTADO_USA}>
-                              {opt.NOMBRE || opt.nombre || opt.id}
-                            </option>
-                          ))}
-                        </select>
+                        <div className="mt-1">
+                          <Select
+                            options={(selectOptions[field.name] || []).map(opt => ({
+                              value: opt.id || opt.ID_ESTADO_USA,
+                              label: opt.NOMBRE || opt.nombre || opt.id
+                            }))}
+                            value={(selectOptions[field.name] || []).map(opt => ({
+                              value: opt.id || opt.ID_ESTADO_USA,
+                              label: opt.NOMBRE || opt.nombre || opt.id
+                            })).find(o => o.value == formData[field.name]) || null}
+                            onChange={opt => handleChange({ target: { name: field.name, value: opt ? opt.value : '' } })}
+                            placeholder="Selecciona una opción"
+                            isClearable
+                            menuPortalTarget={document.body}
+                            styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
+                          />
+                        </div>
                       ) : (
                         <input
                           type={field.type}

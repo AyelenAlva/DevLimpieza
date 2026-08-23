@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Select from 'react-select';
 
 export default function AltaFuncionPago({ apiBase, setError, showSuccess }) {
   const [data, setData] = useState([]);
@@ -171,22 +172,28 @@ export default function AltaFuncionPago({ apiBase, setError, showSuccess }) {
             <form onSubmit={handleSubmit} className="p-6 space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Función *</label>
-                <select name="id_funcion" value={formData.id_funcion} onChange={handleChange} required className="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:ring-2 focus:ring-indigo-500">
-                  <option value="">Seleccione...</option>
-                  {funciones.map(f => (
-                    <option key={f.ID_FUNCION} value={f.ID_FUNCION}>{f.DESCRIPCION}</option>
-                  ))}
-                </select>
+                <Select
+                  options={funciones.map(f => ({ value: f.ID_FUNCION, label: f.DESCRIPCION }))}
+                  value={funciones.map(f => ({ value: f.ID_FUNCION, label: f.DESCRIPCION })).find(o => o.value == formData.id_funcion) || null}
+                  onChange={opt => handleChange({ target: { name: 'id_funcion', value: opt ? opt.value : '' } })}
+                  placeholder="Seleccione..."
+                  isClearable
+                  menuPortalTarget={document.body}
+                  styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
+                />
               </div>
               
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Tipo de Pago *</label>
-                <select name="id_tipo_pago" value={formData.id_tipo_pago} onChange={handleChange} required className="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:ring-2 focus:ring-indigo-500">
-                  <option value="">Seleccione...</option>
-                  {tiposPago.map(t => (
-                    <option key={t.ID_TIPO_PAGO} value={t.ID_TIPO_PAGO}>{t.DESCRIPCION}</option>
-                  ))}
-                </select>
+                <Select
+                  options={tiposPago.map(t => ({ value: t.ID_TIPO_PAGO, label: t.DESCRIPCION }))}
+                  value={tiposPago.map(t => ({ value: t.ID_TIPO_PAGO, label: t.DESCRIPCION })).find(o => o.value == formData.id_tipo_pago) || null}
+                  onChange={opt => handleChange({ target: { name: 'id_tipo_pago', value: opt ? opt.value : '' } })}
+                  placeholder="Seleccione..."
+                  isClearable
+                  menuPortalTarget={document.body}
+                  styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
+                />
               </div>
 
               <div>

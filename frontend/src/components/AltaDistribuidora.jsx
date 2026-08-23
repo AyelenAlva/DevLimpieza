@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import Select from 'react-select';
 
 export default function AltaDistribuidora({ apiBase }) {
   const [data, setData] = useState([]);
@@ -174,10 +175,15 @@ export default function AltaDistribuidora({ apiBase }) {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Ciudad</label>
-                  <select name="id_ciudad" value={formData.id_ciudad} onChange={handleChange} className="mt-1 block w-full p-2 border border-gray-300 rounded">
-                    <option value="">Ninguna / Opcional</option>
-                    {ciudades.map(ciu => <option key={ciu.ID_CIUDAD} value={ciu.ID_CIUDAD}>{ciu.NOMBRE}</option>)}
-                  </select>
+                  <Select
+                    options={ciudades.map(c => ({ value: c.ID_CIUDAD, label: c.NOMBRE }))}
+                    value={ciudades.map(c => ({ value: c.ID_CIUDAD, label: c.NOMBRE })).find(o => o.value == formData.id_ciudad) || null}
+                    onChange={opt => handleChange({ target: { name: 'id_ciudad', value: opt ? opt.value : '' } })}
+                    placeholder="Ninguna / Opcional"
+                    isClearable
+                    menuPortalTarget={document.body}
+                    styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
+                  />
                 </div>
               </form>
             </div>
