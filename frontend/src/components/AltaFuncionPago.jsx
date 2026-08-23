@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-export default function AltaFuncionPago({ apiBase }) {
+export default function AltaFuncionPago({ apiBase, setError, showSuccess }) {
   const [data, setData] = useState([]);
   const [loadingList, setLoadingList] = useState(true);
   
@@ -35,7 +35,7 @@ export default function AltaFuncionPago({ apiBase }) {
       setData(res.data);
     } catch (err) {
       console.error(err);
-      alert('Error al cargar la lista');
+      setError('Error al cargar la lista de funciones de pago');
     } finally {
       setLoadingList(false);
     }
@@ -104,10 +104,11 @@ export default function AltaFuncionPago({ apiBase }) {
         await axios.post(`${apiBase}?action=funcion_pago`, formData);
       }
       setIsModalOpen(false);
+      showSuccess(isEditing ? 'Pago por función actualizado correctamente' : 'Pago por función creado correctamente');
       fetchData();
     } catch (err) {
       console.error(err);
-      alert(err.response?.data?.error || 'Error al guardar');
+      setError(err.response?.data?.error || 'Error al guardar');
     }
   };
 

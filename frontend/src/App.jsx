@@ -75,7 +75,7 @@ function App() {
   };
 
   const fetchData = async (tabla) => {
-    if (tabla.startsWith('alta_')) return; // No fetch for forms
+    if (tabla.startsWith('alta_') || tabla === 'funcion_pago') return; // No fetch for forms or custom screens
     setLoading(true);
     setError(null);
     try {
@@ -308,9 +308,9 @@ function App() {
           ) : activeTab === 'alta_distribuidora' ? (
             <AltaDistribuidora apiBase={API_BASE} />
           ) : activeTab === 'alta_pedido' ? (
-            <AltaPedido apiBase={API_BASE} />
+            <AltaPedido apiBase={API_BASE} setError={setError} showSuccess={showSuccess} />
           ) : activeTab === 'funcion_pago' ? (
-            <AltaFuncionPago apiBase={API_BASE} />
+            <AltaFuncionPago apiBase={API_BASE} setError={setError} showSuccess={showSuccess} />
           ) : loading ? (
             <div className="flex justify-center items-center h-full">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>

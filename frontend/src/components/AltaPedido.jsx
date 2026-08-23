@@ -5,7 +5,7 @@ const API_BASE = import.meta.env.PROD
   ? '../api/index.php' 
   : 'http://hispaniaimports.com/DEV_Limpieza/api/index.php';
 
-export default function AltaPedido() {
+export default function AltaPedido({ apiBase, setError, showSuccess }) {
   const [pedidos, setPedidos] = useState([]);
   const [loading, setLoading] = useState(false);
   const [expandedId, setExpandedId] = useState(null);
@@ -132,7 +132,7 @@ export default function AltaPedido() {
 
   const handleSaveRecepcion = async (e) => {
     e.preventDefault();
-    if (!recepcionData.id_estado_cabecera) return alert("Seleccione el estado de la recepción");
+    if (!recepcionData.id_estado_cabecera) return setError("Seleccione el estado de la recepción");
 
     try {
       await axios.post(`${API_BASE}?action=recepcion`, recepcionData);
@@ -142,17 +142,17 @@ export default function AltaPedido() {
       if (expandedId === recepcionData.id_pedido) {
         setExpandedId(null);
       }
-      alert('Recepción guardada correctamente');
+      showSuccess('Recepción guardada correctamente');
     } catch (err) {
       console.error(err);
-      alert(err.response?.data?.error || "Error al guardar la recepción");
+      setError(err.response?.data?.error || "Error al guardar la recepción");
     }
   };
 
   const handleSave = async (e) => {
     e.preventDefault();
-    if (!formData.id_distribuidora) return alert("Seleccione una distribuidora");
-    if (formData.items.length === 0) return alert("Agregue al menos un producto");
+    if (!formData.id_distribuidora) return setError("Seleccione una distribuidora");
+    if (formData.items.length === 0) return setError("Agregue al menos un producto");
     
     try {
       await axios.post(`${API_BASE}?action=pedido`, {
@@ -161,10 +161,11 @@ export default function AltaPedido() {
         detalles: formData.items
       });
       setIsModalOpen(false);
+      showSuccess("Pedido guardado correctamente");
       fetchPedidos();
     } catch (err) {
       console.error(err);
-      alert("Error al guardar el pedido");
+      setError("Error al guardar el pedido");
     }
   };
 
