@@ -169,8 +169,13 @@ export default function AltaFuncionPago({ apiBase, setError, showSuccess }) {
                   <td className="px-6 py-4">${row.MONTO}</td>
                   <td className="px-6 py-4">{row.FECHA_DESDE}</td>
                   <td className="px-6 py-4">{row.FECHA_HASTA}</td>
-                  <td className="px-6 py-4">
-                    <button onClick={() => handleEdit(row)} className="text-indigo-600 hover:text-indigo-900 mr-3">Editar</button>
+                  <td className="px-6 py-4 flex gap-2">
+                    <button onClick={() => handleEdit(row)} className="bg-indigo-50 text-indigo-600 px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-indigo-100 transition-colors">
+                      Editar
+                    </button>
+                    <button onClick={() => handleDelete(row.ID_FUNCION_PAGO)} className="bg-red-50 text-red-600 px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-red-100 transition-colors">
+                      Eliminar
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -180,8 +185,8 @@ export default function AltaFuncionPago({ apiBase, setError, showSuccess }) {
       </div>
 
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-md">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden animate-scale-in">
+        <div className="fixed inset-0 bg-gray-900/60 backdrop-filter backdrop-blur-sm flex items-center justify-center z-50 transition-all duration-300">
+          <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-2xl max-h-[90vh] overflow-y-auto animate-scale-in">
             <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
               <h3 className="text-lg font-bold text-gray-800">
                 {isEditing ? 'Editar Pago por Función' : 'Nuevo Pago por Función'}

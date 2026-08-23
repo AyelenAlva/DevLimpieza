@@ -163,9 +163,13 @@ export default function AltaCliente({ apiBase }) {
                   <td className="px-6 py-4">{row.EMAIL}</td>
                   <td className="px-6 py-4">{row.DESC_ESTADO || row.ID_ESTADO}</td>
                   <td className="px-6 py-4">{row.DESC_CIUDAD || row.ID_CIUDAD}</td>
-                  <td className="px-6 py-4">
-                    <button onClick={() => handleEdit(row)} className="text-indigo-600 hover:text-indigo-900 mr-3">Editar</button>
-                    <button onClick={() => handleDelete(row.ID_PERSONA)} className="text-red-600 hover:text-red-900">Eliminar</button>
+                  <td className="px-6 py-4 flex gap-2">
+                    <button onClick={() => handleEdit(row)} className="bg-indigo-50 text-indigo-600 px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-indigo-100 transition-colors">
+                      Editar
+                    </button>
+                    <button onClick={() => handleDelete(row.ID_PERSONA)} className="bg-red-50 text-red-600 px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-red-100 transition-colors">
+                      Eliminar
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -178,7 +182,7 @@ export default function AltaCliente({ apiBase }) {
       </div>
 
       {isModalOpen && (
-        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-md flex items-center justify-center z-50 transition-all duration-300">
+        <div className="fixed inset-0 bg-gray-900/60 backdrop-filter backdrop-blur-sm flex items-center justify-center z-50 transition-all duration-300">
           <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-2xl max-h-[90vh] overflow-y-auto animate-scale-in">
             <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center bg-gray-50">
               <h3 className="text-lg font-medium text-gray-900">{formData.id_persona ? 'Editar Cliente' : 'Alta de Nuevo Cliente'}</h3>

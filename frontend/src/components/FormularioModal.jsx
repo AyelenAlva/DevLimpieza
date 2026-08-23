@@ -36,7 +36,7 @@ export default function FormularioModal({ isOpen, onClose, onSave, itemEdit, fie
       <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
         
         <div 
-          className="fixed inset-0 transition-opacity bg-slate-900/40 backdrop-blur-md" 
+          className="fixed inset-0 transition-opacity bg-gray-900/60 backdrop-filter backdrop-blur-sm" 
           aria-hidden="true" 
           onClick={onClose}
         ></div>
