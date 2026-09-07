@@ -6,7 +6,7 @@ import { useSortableData } from '../hooks/useSortableData';
 
 export default function AltaEmpleado({ apiBase }) {
   const [data, setData] = useState([]);
-  const [loadingList, setLoadingList] = useState(false);
+  const [loadingList, setLoadingList] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -15,7 +15,7 @@ export default function AltaEmpleado({ apiBase }) {
 
   const [ciudades, setCiudades] = useState([]);
   const [saving, setSaving] = useState(false);
-  const [message, setMessage] = useState(null);
+
   const [searchTerm, setSearchTerm] = useState('');
 
   const loadList = async () => {
@@ -47,7 +47,7 @@ export default function AltaEmpleado({ apiBase }) {
 
   const handleCreate = () => {
     setFormData({ id_persona: '', tipo_persona: 'F', nombre: '', apellido: '', telefono: '', email: '', direccion: '', id_ciudad: '', ssn: '', encargado: 'N', fecha_ingreso: '' });
-    setMessage(null);
+
     setIsModalOpen(true);
   };
 
@@ -66,7 +66,7 @@ export default function AltaEmpleado({ apiBase }) {
       encargado: row.ES_ENCARGADO || 'N',
       fecha_ingreso: row.FECHA_INGRESO || ''
     });
-    setMessage(null);
+
     setIsModalOpen(true);
   };
 
@@ -91,7 +91,8 @@ export default function AltaEmpleado({ apiBase }) {
       setMessage({ text: '🚨 Error: El SSN/Documento no puede estar vacío.' });
       return;
     }
-    if (!formData.telefono || !/^[0-9+\-\s()]+$/.test(formData.telefono)) {
+    const phonePattern = /^[0-9]+$/;
+    if (!formData.telefono || !phonePattern.test(formData.telefono)) {
       setMessage({ text: '🚨 Error: El teléfono es obligatorio y solo puede contener números.' });
       return;
     }

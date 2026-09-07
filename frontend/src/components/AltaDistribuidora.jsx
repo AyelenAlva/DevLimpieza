@@ -4,7 +4,7 @@ import axios from 'axios';
 import Select from 'react-select';
 import { useSortableData } from '../hooks/useSortableData';
 
-export default function AltaDistribuidora({ apiBase }) {
+export default function AltaDistribuidora({ apiBase, setError, showSuccess }) {
   const [data, setData] = useState([]);
   const [loadingList, setLoadingList] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);

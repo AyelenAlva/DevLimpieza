@@ -4,9 +4,9 @@ import axios from 'axios';
 import Select from 'react-select';
 import { useSortableData } from '../hooks/useSortableData';
 
-export default function AltaCliente({ apiBase }) {
+export default function AltaCliente({ apiBase, setError, showSuccess }) {
   const [data, setData] = useState([]);
-  const [loadingList, setLoadingList] = useState(false);
+  const [loadingList, setLoadingList] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -15,9 +15,9 @@ export default function AltaCliente({ apiBase }) {
 
   const [estados, setEstados] = useState([]);
   const [ciudades, setCiudades] = useState([]);
-  const [origenes, setOrigenes] = useState([]);
+  const [isEditing, setIsEditing] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [message, setMessage] = useState(null);
+  const [origenes, setOrigenes] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
 
   const loadList = async () => {
@@ -55,7 +55,6 @@ export default function AltaCliente({ apiBase }) {
 
   const handleCreate = () => {
     setFormData({ id_persona: '', tipo_persona: 'F', nombre: '', apellido: '', telefono: '', email: '', direccion: '', id_estado: '', id_ciudad: '', id_origen: '' });
-    setMessage(null);
     setIsModalOpen(true);
   };
 
@@ -91,28 +90,29 @@ export default function AltaCliente({ apiBase }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.id_estado || !formData.id_ciudad) {
-      setMessage({ text: '🚨 Error: Debe seleccionar un Estado y una Ciudad obligatoriamente.' });
+      setError('🚨 Error: Debe seleccionar un Estado y una Ciudad obligatoriamente.');
       return;
     }
-    if (formData.telefono && !/^[0-9+\-\s()]+$/.test(formData.telefono)) {
-      setMessage({ text: '🚨 Error: El teléfono solo puede contener números.' });
+    const phonePattern = /^[0-9]+$/;
+    if (formData.telefono && !phonePattern.test(formData.telefono)) {
+      setError('🚨 Error: El teléfono solo puede contener números.');
       return;
     }
     setSaving(true);
-    setMessage(null);
+    setError(null);
 
     try {
       if (formData.id_persona) {
         await axios.put(`${apiBase}?action=crud_cliente&id=${formData.id_cliente}`, formData);
-        alert('Cliente actualizado exitosamente.');
+        showSuccess('Cliente actualizado exitosamente.');
       } else {
         const res = await axios.post(`${apiBase}?action=alta_cliente`, formData);
-        alert(res.data.message || 'Cliente registrado exitosamente.');
+        showSuccess(res.data.message || 'Cliente registrado exitosamente.');
       }
       setIsModalOpen(false);
       loadList(); // Recargar lista
     } catch (err) {
-      setMessage({ type: 'error', text: err.response?.data?.error || 'Error al guardar cliente.' });
+      setError(err.response?.data?.error || 'Error al guardar cliente.');
     } finally {
       setSaving(false);
     }
@@ -203,8 +203,6 @@ export default function AltaCliente({ apiBase }) {
             </div>
             
             <div className="p-6 overflow-y-auto">
-              {message && <div className="p-4 mb-4 rounded bg-red-100 text-red-800">{message.text}</div>}
-              
               <form id="form-cliente" onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
