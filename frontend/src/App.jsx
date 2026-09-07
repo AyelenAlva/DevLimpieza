@@ -199,7 +199,7 @@ function App() {
                 }`}
               >
                 <div className={`w-1.5 h-1.5 rounded-full ${activeTab === 'alta_cliente' ? 'bg-blue-400' : 'bg-transparent'}`}></div>
-                Alta Clientes
+                Clientes
               </button>
             </li>
             <li>
@@ -212,7 +212,7 @@ function App() {
                 }`}
               >
                 <div className={`w-1.5 h-1.5 rounded-full ${activeTab === 'alta_empleado' ? 'bg-blue-400' : 'bg-transparent'}`}></div>
-                Alta Empleados
+                Empleados
               </button>
             </li>
             <li>
@@ -225,7 +225,7 @@ function App() {
                 }`}
               >
                 <div className={`w-1.5 h-1.5 rounded-full ${activeTab === 'alta_distribuidora' ? 'bg-blue-400' : 'bg-transparent'}`}></div>
-                Alta Distribuidoras
+                Distribuidoras
               </button>
             </li>
             <li>
@@ -238,7 +238,7 @@ function App() {
                 }`}
               >
                 <div className={`w-1.5 h-1.5 rounded-full ${activeTab === 'alta_pedido' ? 'bg-blue-400' : 'bg-transparent'}`}></div>
-                Alta Pedidos
+                Pedidos
               </button>
             </li>
             <li>
@@ -266,10 +266,10 @@ function App() {
         {/* Header */}
         <header className="glass shadow-sm px-8 py-5 flex justify-between items-center sticky top-0 z-10">
           <h1 className="text-2xl font-bold text-gray-800 tracking-tight">
-            {activeTab === 'alta_cliente' ? 'Alta de Cliente' :
-             activeTab === 'alta_empleado' ? 'Alta de Empleado' :
-             activeTab === 'alta_distribuidora' ? 'Alta de Distribuidora' :
-             activeTab === 'alta_pedido' ? 'Alta de Pedido' :
+            {activeTab === 'alta_cliente' ? 'Clientes' :
+             activeTab === 'alta_empleado' ? 'Empleados' :
+             activeTab === 'alta_distribuidora' ? 'Distribuidoras' :
+             activeTab === 'alta_pedido' ? 'Pedidos' :
              activeTab === 'funcion_pago' ? 'Pago por Función' :
              TABLAS.find(t => t.id === activeTab)?.label}
           </h1>
