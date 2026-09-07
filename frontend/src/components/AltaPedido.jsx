@@ -147,11 +147,14 @@ export default function AltaPedido({ apiBase, setError, showSuccess }) {
     try {
       const res = await axios.post(`${API_BASE}?action=recepcion`, recepcionData);
       setIsRecepcionModalOpen(false);
-      fetchPedidos();
-      // Refrescar el expand si estaba abierto
+      await fetchPedidos();
+      // Refrescar el expand si estaba abierto o limpiarlo de la caché
       if (expandedId === recepcionData.id_pedido) {
         setExpandedId(null);
       }
+      setDetalles(prev => { const c = {...prev}; delete c[recepcionData.id_pedido]; return c; });
+      setRecepciones(prev => { const c = {...prev}; delete c[recepcionData.id_pedido]; return c; });
+      
       showSuccess(res.data.message || 'Recepción guardada correctamente');
     } catch (err) {
       console.error(err);
