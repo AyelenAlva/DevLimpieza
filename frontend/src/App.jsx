@@ -164,7 +164,7 @@ function App() {
               <li key={tabla.id}>
                 <button
                   onClick={() => setActiveTab(tabla.id)}
-                  className={`w-full text-left px-3 py-2 rounded-lg transition-all duration-200 flex items-center gap-3 text-sm ${
+                  className={`w-full text-left cursor-pointer px-3 py-2 rounded-lg transition-all duration-200 flex items-center gap-3 text-sm ${
                     activeTab === tabla.id 
                       ? 'bg-blue-600/20 text-blue-400 font-semibold' 
                       : 'hover:bg-gray-800/80 hover:text-white'
@@ -192,7 +192,7 @@ function App() {
             <li>
               <button
                 onClick={() => setActiveTab('alta_cliente')}
-                className={`w-full text-left px-3 py-2 rounded-lg transition-all duration-200 flex items-center gap-3 text-sm ${
+                className={`w-full text-left cursor-pointer px-3 py-2 rounded-lg transition-all duration-200 flex items-center gap-3 text-sm ${
                   activeTab === 'alta_cliente' 
                     ? 'bg-blue-600/20 text-blue-400 font-semibold' 
                     : 'hover:bg-gray-800/80 hover:text-white'
@@ -205,7 +205,7 @@ function App() {
             <li>
               <button
                 onClick={() => setActiveTab('alta_empleado')}
-                className={`w-full text-left px-3 py-2 rounded-lg transition-all duration-200 flex items-center gap-3 text-sm ${
+                className={`w-full text-left cursor-pointer px-3 py-2 rounded-lg transition-all duration-200 flex items-center gap-3 text-sm ${
                   activeTab === 'alta_empleado' 
                     ? 'bg-blue-600/20 text-blue-400 font-semibold' 
                     : 'hover:bg-gray-800/80 hover:text-white'
@@ -218,7 +218,7 @@ function App() {
             <li>
               <button
                 onClick={() => setActiveTab('alta_distribuidora')}
-                className={`w-full text-left px-3 py-2 rounded-lg transition-all duration-200 flex items-center gap-3 text-sm ${
+                className={`w-full text-left cursor-pointer px-3 py-2 rounded-lg transition-all duration-200 flex items-center gap-3 text-sm ${
                   activeTab === 'alta_distribuidora' 
                     ? 'bg-blue-600/20 text-blue-400 font-semibold' 
                     : 'hover:bg-gray-800/80 hover:text-white'
@@ -231,7 +231,7 @@ function App() {
             <li>
               <button
                 onClick={() => setActiveTab('alta_pedido')}
-                className={`w-full text-left px-3 py-2 rounded-lg transition-all duration-200 flex items-center gap-3 text-sm ${
+                className={`w-full text-left cursor-pointer px-3 py-2 rounded-lg transition-all duration-200 flex items-center gap-3 text-sm ${
                   activeTab === 'alta_pedido' 
                     ? 'bg-blue-600/20 text-blue-400 font-semibold' 
                     : 'hover:bg-gray-800/80 hover:text-white'
@@ -244,7 +244,7 @@ function App() {
             <li>
               <button
                 onClick={() => setActiveTab('funcion_pago')}
-                className={`w-full text-left px-3 py-2 rounded-lg transition-all duration-200 flex items-center gap-3 text-sm ${
+                className={`w-full text-left cursor-pointer px-3 py-2 rounded-lg transition-all duration-200 flex items-center gap-3 text-sm ${
                   activeTab === 'funcion_pago' 
                     ? 'bg-blue-600/20 text-blue-400 font-semibold' 
                     : 'hover:bg-gray-800/80 hover:text-white'
@@ -276,7 +276,7 @@ function App() {
           {!activeTab.startsWith('alta_') && activeTab !== 'funcion_pago' && (
             <button
               onClick={handleCreate}
-              className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-5 py-2.5 rounded-xl hover:from-blue-700 hover:to-indigo-700 shadow-md hover:shadow-lg flex items-center transition-all font-medium gap-2 animate-scale-in"
+              className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-5 py-2.5 rounded-xl hover:from-blue-700 hover:to-indigo-700 shadow-md hover:shadow-lg flex items-center transition-all font-medium gap-2 animate-scale-in cursor-pointer"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
               Nuevo Registro

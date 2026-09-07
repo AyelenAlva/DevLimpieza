@@ -119,8 +119,9 @@ export default function AltaCliente({ apiBase }) {
     <div className="flex flex-col h-full relative">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-bold text-gray-800">Listado de Clientes</h2>
-        <button onClick={handleCreate} className="bg-indigo-600 text-white px-4 py-2 rounded shadow hover:bg-indigo-700">
-          + Nuevo Cliente
+        <button onClick={handleCreate} className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-5 py-2.5 rounded-xl hover:from-blue-700 hover:to-indigo-700 shadow-md hover:shadow-lg flex items-center transition-all font-medium gap-2 cursor-pointer">
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
+          Nuevo Cliente
         </button>
       </div>
 
@@ -270,9 +271,9 @@ export default function AltaCliente({ apiBase }) {
               </form>
             </div>
             
-            <div className="px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-end space-x-3">
-              <button onClick={() => setIsModalOpen(false)} className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50">Cancelar</button>
-              <button type="submit" form="form-cliente" disabled={saving} className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-50">
+            <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end gap-3 rounded-b-2xl">
+              <button onClick={() => setIsModalOpen(false)} type="button" className="px-5 py-2.5 rounded-xl border border-gray-300 text-gray-700 font-medium hover:bg-gray-50 cursor-pointer transition-colors">Cancelar</button>
+              <button type="submit" form="form-cliente" disabled={saving} className="px-5 py-2.5 rounded-xl bg-indigo-600 text-white font-medium shadow-md hover:bg-indigo-700 cursor-pointer transition-colors disabled:opacity-50">
                 {saving ? 'Guardando...' : 'Guardar Cliente'}
               </button>
             </div>
