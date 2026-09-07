@@ -56,7 +56,7 @@ class RecepcionController {
                 $id_estado_det = $estado_det['ID_ESTADO'];
 
                 // Insertar RECEPCION_DET
-                $stmt_det = $this->pdo->prepare("INSERT INTO RECEPCION_DET (ID_RECEPCION_CAB, ID_PEDIDO_DET, ID_PRODUCTO, CANTIDAD_RECIBIDA, COSTO_UNITARIO_REAL, ID_ESTADO) VALUES (?, ?, ?, ?, ?, ?)");
+                $stmt_det = $this->pdo->prepare("INSERT INTO RECEPCION_DET (ID_RECEPCION, ID_PEDIDO_DET, ID_PRODUCTO, CANTIDAD_RECIBIDA, COSTO_UNITARIO_REAL, ID_ESTADO) VALUES (?, ?, ?, ?, ?, ?)");
                 foreach ($detalles as $det) {
                     $stmt_det->execute([
                         $id_recepcion_generado,
