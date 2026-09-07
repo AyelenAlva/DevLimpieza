@@ -161,19 +161,36 @@ function App() {
           <nav className="px-4 pb-2">
             <ul className="space-y-1">
             {TABLAS.map(tabla => (
-              <li key={tabla.id}>
-                <button
-                  onClick={() => setActiveTab(tabla.id)}
-                  className={`w-full text-left cursor-pointer px-3 py-2 rounded-lg transition-all duration-200 flex items-center gap-3 text-sm ${
-                    activeTab === tabla.id 
-                      ? 'bg-blue-600/20 text-blue-400 font-semibold' 
-                      : 'hover:bg-gray-800/80 hover:text-white'
-                  }`}
-                >
-                  <div className={`w-1.5 h-1.5 rounded-full ${activeTab === tabla.id ? 'bg-blue-400' : 'bg-transparent'}`}></div>
-                  {tabla.label}
-                </button>
-              </li>
+              <React.Fragment key={tabla.id}>
+                <li>
+                  <button
+                    onClick={() => setActiveTab(tabla.id)}
+                    className={`w-full text-left cursor-pointer px-3 py-2 rounded-lg transition-all duration-200 flex items-center gap-3 text-sm ${
+                      activeTab === tabla.id 
+                        ? 'bg-blue-600/20 text-blue-400 font-semibold' 
+                        : 'hover:bg-gray-800/80 hover:text-white'
+                    }`}
+                  >
+                    <div className={`w-1.5 h-1.5 rounded-full ${activeTab === tabla.id ? 'bg-blue-400' : 'bg-transparent'}`}></div>
+                    {tabla.label}
+                  </button>
+                </li>
+                {tabla.id === 'funcion' && (
+                  <li>
+                    <button
+                      onClick={() => setActiveTab('funcion_pago')}
+                      className={`w-full text-left cursor-pointer px-3 py-2 rounded-lg transition-all duration-200 flex items-center gap-3 text-sm ${
+                        activeTab === 'funcion_pago' 
+                          ? 'bg-blue-600/20 text-blue-400 font-semibold' 
+                          : 'hover:bg-gray-800/80 hover:text-white'
+                      }`}
+                    >
+                      <div className={`w-1.5 h-1.5 rounded-full ${activeTab === 'funcion_pago' ? 'bg-blue-400' : 'bg-transparent'}`}></div>
+                      Pago por Función
+                    </button>
+                  </li>
+                )}
+              </React.Fragment>
             ))}
             </ul>
           </nav>
@@ -241,19 +258,7 @@ function App() {
                 Pedidos
               </button>
             </li>
-            <li>
-              <button
-                onClick={() => setActiveTab('funcion_pago')}
-                className={`w-full text-left cursor-pointer px-3 py-2 rounded-lg transition-all duration-200 flex items-center gap-3 text-sm ${
-                  activeTab === 'funcion_pago' 
-                    ? 'bg-blue-600/20 text-blue-400 font-semibold' 
-                    : 'hover:bg-gray-800/80 hover:text-white'
-                }`}
-              >
-                <div className={`w-1.5 h-1.5 rounded-full ${activeTab === 'funcion_pago' ? 'bg-blue-400' : 'bg-transparent'}`}></div>
-                Pago por Función
-              </button>
-            </li>
+
           </ul>
           </nav>
         </div>
