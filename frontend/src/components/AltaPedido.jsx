@@ -326,7 +326,13 @@ export default function AltaPedido({ apiBase, setError, showSuccess }) {
                                     <tr key={d.ID_PEDIDO_DET} className="hover:bg-gray-50/80">
                                       <td className="px-4 py-3 text-gray-500">{d.CODIGO_PRODUCTO}</td>
                                       <td className="px-4 py-3 font-medium text-gray-800">{d.PRODUCTO}</td>
-                                      <td className="px-4 py-3 text-right">{d.CANTIDAD_PEDIDA} {d.UNIDAD_MEDIDA}</td>
+                                      <td className="px-4 py-3 text-right">
+                                        <div className="flex flex-col gap-0.5 items-end text-xs">
+                                          <div><span className="text-gray-400 font-normal mr-1">Cantidad:</span> <span className="font-medium text-gray-800">{parseFloat(d.CANTIDAD_PEDIDA).toFixed(2)}</span></div>
+                                          <div><span className="text-gray-400 font-normal mr-1">Marca:</span> <span className="text-gray-600">{d.MARCA || '-'}</span></div>
+                                          <div><span className="text-gray-400 font-normal mr-1">U. Medida:</span> <span className="text-gray-600">{d.UNIDAD_MEDIDA || '-'}</span></div>
+                                        </div>
+                                      </td>
                                       <td className="px-4 py-3 text-right">${parseFloat(d.COSTO_UNITARIO).toFixed(2)}</td>
                                       <td className="px-4 py-3 text-right font-medium text-blue-700">${parseFloat(d.SUBTOTAL_LINEA).toFixed(2)}</td>
                                     </tr>
@@ -430,7 +436,7 @@ export default function AltaPedido({ apiBase, setError, showSuccess }) {
                       <div className="flex text-xs font-semibold text-gray-500 uppercase tracking-wider px-2">
                         <div className="flex-1">Producto</div>
                         <div className="w-24 text-right">Cantidad</div>
-                        <div className="w-32 text-right">Costo U. ($)</div>
+                        <div className="w-32 text-right">Costo</div>
                         <div className="w-10"></div>
                       </div>
                     )}
