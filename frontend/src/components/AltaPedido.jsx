@@ -145,14 +145,14 @@ export default function AltaPedido({ apiBase, setError, showSuccess }) {
     }
 
     try {
-      await axios.post(`${API_BASE}?action=recepcion`, recepcionData);
+      const res = await axios.post(`${API_BASE}?action=recepcion`, recepcionData);
       setIsRecepcionModalOpen(false);
       fetchPedidos();
       // Refrescar el expand si estaba abierto
       if (expandedId === recepcionData.id_pedido) {
         setExpandedId(null);
       }
-      showSuccess('Recepción guardada correctamente');
+      showSuccess(res.data.message || 'Recepción guardada correctamente');
     } catch (err) {
       console.error(err);
       setError(err.response?.data?.error || "Error al guardar la recepción");

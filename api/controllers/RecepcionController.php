@@ -73,14 +73,17 @@ class RecepcionController {
                 $stmt_sp->execute([$id_pedido]);
 
                 $out = $this->pdo->query("SELECT @resultado AS resultado, @mensaje AS mensaje")->fetch();
-                if ($out && $out['resultado'] != 0) {
+                // Si resultado es muy específico de error (ej: -1) lanzamos excepción, sino asumimos éxito
+                if ($out && isset($out['resultado']) && (int)$out['resultado'] < 0) {
                      throw new Exception($out['mensaje']);
                 }
 
                 if ($this->pdo->inTransaction()) {
                     $this->pdo->commit();
                 }
-                echo json_encode(["success" => true, "message" => "Recepción registrada correctamente"]);
+                
+                $msg = ($out && !empty($out['mensaje'])) ? $out['mensaje'] : "Recepción registrada correctamente";
+                echo json_encode(["success" => true, "message" => $msg]);
             } catch (Exception $e) {
                 if ($this->pdo->inTransaction()) {
                     $this->pdo->rollBack();
