@@ -44,7 +44,7 @@ class RecepcionController {
             $this->pdo->beginTransaction();
             try {
                 // Insertar RECEPCION_CAB
-                $stmt_cab = $this->pdo->prepare("INSERT INTO RECEPCION_CAB (ID_PEDIDO, ID_ESTADO, OBSERVACION, FECHA_RECEPCION) VALUES (?, ?, ?, NOW())");
+                $stmt_cab = $this->pdo->prepare("INSERT INTO RECEPCION_CAB (ID_PEDIDO, ID_ESTADO, OBSERVACIONES, FECHA_RECEPCION) VALUES (?, ?, ?, NOW())");
                 $stmt_cab->execute([$id_pedido, $id_estado_cabecera, $observaciones]);
                 $id_recepcion_generado = $this->pdo->lastInsertId();
 
