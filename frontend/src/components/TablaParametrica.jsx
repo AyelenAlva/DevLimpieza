@@ -48,7 +48,7 @@ export default function TablaParametrica({ data, onEdit, onDelete, onAdd, title,
   const { items: sortedData, requestSort, getSortIcon } = useSortableData(filteredData, { key: columns[0], direction: 'asc' });
 
   return (
-    <div className="space-y-6 animate-fade-in flex flex-col h-full">
+    <div className="space-y-6 animate-fade-in">
       <div className="flex justify-between items-center bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
         <div>
           <h2 className="text-2xl font-bold text-gray-800">{title}</h2>
@@ -73,8 +73,9 @@ export default function TablaParametrica({ data, onEdit, onDelete, onAdd, title,
         </svg>
       </div>
 
-      <div className="flex-1 overflow-auto bg-white rounded-2xl shadow-sm border border-gray-100">
-        <table className="min-w-full text-left text-sm whitespace-nowrap">
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div className="overflow-x-auto w-full">
+          <table className="w-full text-left text-sm whitespace-nowrap">
         <thead className="uppercase tracking-wider border-b-2 border-gray-200 bg-gray-50">
           <tr>
             {columns.map((col) => (
@@ -114,6 +115,7 @@ export default function TablaParametrica({ data, onEdit, onDelete, onAdd, title,
           )})}
         </tbody>
       </table>
+      </div>
     </div>
     </div>
   );
