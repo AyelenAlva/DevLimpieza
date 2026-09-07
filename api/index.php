@@ -33,7 +33,7 @@ try {
         (new DistribuidoraController($pdo))->handleRequest($method, $id, $data);
     } elseif ($action === 'pedido') {
         (new PedidoController($pdo))->handleRequest($method, $id, $data);
-    } elseif ($action === 'recepcion') {
+    } elseif ($action === 'recepcion' || $action === 'ingresar_stock') {
         (new RecepcionController($pdo))->handleRequest($method, $id, $data);
     } elseif ($action === 'funcion_pago') {
         (new FuncionPagoController($pdo))->handleRequest($method, $id, $data);

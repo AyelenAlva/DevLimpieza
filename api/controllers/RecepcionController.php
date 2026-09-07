@@ -28,6 +28,28 @@ class RecepcionController {
         }
 
         if ($method === 'POST') {
+            $action = $_GET['action'] ?? null;
+            if ($action === 'ingresar_stock') {
+                if (!$data || !isset($data['id_recepcion'])) {
+                    http_response_code(400); echo json_encode(["error" => "Se requiere ID_RECEPCION"]); exit;
+                }
+                try {
+                    $stmt_sp = $this->pdo->prepare("CALL PRC_INGRESAR_STOCK_RECEPCION(?, 'USER', @resultado, @mensaje)");
+                    $stmt_sp->execute([$data['id_recepcion']]);
+                    
+                    $out = $this->pdo->query("SELECT @resultado AS resultado, @mensaje AS mensaje")->fetch();
+                    if ($out && isset($out['resultado']) && (int)$out['resultado'] < 0) {
+                         throw new Exception($out['mensaje']);
+                    }
+                    $msg = ($out && !empty($out['mensaje'])) ? $out['mensaje'] : "Stock ingresado correctamente";
+                    echo json_encode(["success" => true, "message" => $msg]);
+                } catch (Exception $e) {
+                    http_response_code(500);
+                    echo json_encode(["error" => $e->getMessage()]);
+                }
+                exit;
+            }
+
             if (!$data) {
                 http_response_code(400); echo json_encode(["error" => "Datos JSON invalidos"]); exit;
             }

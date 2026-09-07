@@ -48,7 +48,12 @@ class PedidoController {
                             p.FECHA_PEDIDO,
                             p.FECHA_RECEPCION,
                             p.OBSERVACION,
-                            (SELECT COUNT(*) FROM RECEPCION_CAB r WHERE r.ID_PEDIDO = p.ID_PEDIDO) > 0 AS TIENE_RECEPCION
+                            (SELECT COUNT(*) FROM RECEPCION_CAB r WHERE r.ID_PEDIDO = p.ID_PEDIDO) > 0 AS TIENE_RECEPCION,
+                            (SELECT MAX(ID_RECEPCION) FROM RECEPCION_CAB r WHERE r.ID_PEDIDO = p.ID_PEDIDO) AS ID_RECEPCION,
+                            (SELECT COUNT(1) FROM VW_RECEPCION a 
+                             WHERE a.ID_RECEPCION = (SELECT MAX(ID_RECEPCION) FROM RECEPCION_CAB r WHERE r.ID_PEDIDO = p.ID_PEDIDO)
+                             AND a.ESTADO_PEDIDO IN ('RECIBIDO', 'PARCIAL')
+                             AND a.ESTADO_DETALLE_RECEPCION = 'PENDIENTE_INGRESO_STOCK') AS PENDIENTE_STOCK
                         FROM PEDIDO_CAB p
                         JOIN DISTRIBUIDORA d
                             ON d.ID_DISTRIBUIDORA = p.ID_DISTRIBUIDORA

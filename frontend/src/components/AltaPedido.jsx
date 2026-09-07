@@ -162,6 +162,18 @@ export default function AltaPedido({ apiBase, setError, showSuccess }) {
     }
   };
 
+  const handleIngresarStock = async (idRecepcion) => {
+    if (!window.confirm("¿Confirma el ingreso a stock para esta recepción?")) return;
+    try {
+      const res = await axios.post(`${API_BASE}?action=ingresar_stock`, { id_recepcion: idRecepcion });
+      showSuccess(res.data.message || 'Stock ingresado correctamente');
+      await fetchPedidos();
+    } catch (err) {
+      console.error(err);
+      setError(err.response?.data?.error || "Error al ingresar stock");
+    }
+  };
+
   const handleSave = async (e) => {
     e.preventDefault();
     if (!formData.id_distribuidora) return setError("🚨 Error: Seleccione una distribuidora");
@@ -258,6 +270,7 @@ export default function AltaPedido({ apiBase, setError, showSuccess }) {
                   <th className="px-6 py-4 cursor-pointer hover:bg-gray-200 transition-colors" onClick={() => requestSort('FECHA_PEDIDO')}>Fecha Pedido{getSortIcon('FECHA_PEDIDO')}</th>
                   <th className="px-6 py-4">Observación</th>
                   <th className="px-6 py-4">Recepción</th>
+                  <th className="px-6 py-4 text-center">Stock</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
@@ -296,6 +309,17 @@ export default function AltaPedido({ apiBase, setError, showSuccess }) {
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
                             RECIBIDO
                           </span>
+                        )}
+                      </td>
+                      <td className="px-6 py-4 text-center">
+                        {p.PENDIENTE_STOCK > 0 && (
+                          <button
+                            onClick={() => handleIngresarStock(p.ID_RECEPCION)}
+                            className="text-orange-500 hover:text-orange-700 transition-colors flex items-center justify-center bg-orange-50 p-2 rounded-full hover:bg-orange-100 mx-auto shadow-sm"
+                            title="Ingresar Stock"
+                          >
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
+                          </button>
                         )}
                       </td>
                     </tr>
