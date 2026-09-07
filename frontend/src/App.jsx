@@ -32,7 +32,11 @@ const TABLAS = [
   { id: 'funcion', label: 'Funciones', fields: [{ name: 'DESCRIPCION', label: 'Descripción', type: 'text' }] },
   { id: 'origen_cliente', label: 'Orígenes Cliente', fields: [{ name: 'DESCRIPCION', label: 'Descripción', type: 'text' }] },
   { id: 'tipo_pago', label: 'Tipos de Pago', fields: [{ name: 'DESCRIPCION', label: 'Descripción', type: 'text' }] },
-  { id: 'tipo_servicio', label: 'Tipos de Servicio', fields: [{ name: 'DESCRIPCION', label: 'Descripción', type: 'text' }] }
+  { id: 'tipo_servicio', label: 'Tipos de Servicio', fields: [{ name: 'DESCRIPCION', label: 'Descripción', type: 'text' }] },
+  { id: 'producto', label: 'Productos', fields: [
+    { name: 'CODIGO_PRODUCTO', label: 'Código', type: 'text' },
+    { name: 'DESCRIPCION', label: 'Descripción', type: 'text' }
+  ]}
 ];
 
 const API_BASE = import.meta.env.PROD 
@@ -160,7 +164,7 @@ function App() {
         <div className={`transition-all duration-300 ease-in-out ${openSection === 'parametricas' ? 'opacity-100 max-h-[1000px]' : 'max-h-0 opacity-0 overflow-hidden'}`}>
           <nav className="px-4 pb-2">
             <ul className="space-y-1">
-            {TABLAS.map(tabla => (
+            {TABLAS.filter(t => t.id !== 'producto').map(tabla => (
               <React.Fragment key={tabla.id}>
                 <li>
                   <button
@@ -245,6 +249,33 @@ function App() {
                 Distribuidoras
               </button>
             </li>
+          </ul>
+          </nav>
+        </div>
+
+        <button 
+          onClick={() => setOpenSection(openSection === 'producto' ? null : 'producto')}
+          className="w-full px-6 py-4 flex justify-between items-center text-xs font-bold text-gray-500 uppercase tracking-widest border-t border-gray-800 hover:text-white transition-colors"
+        >
+          <span>Producto</span>
+          <svg className={`w-4 h-4 transition-transform ${openSection === 'producto' ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+        </button>
+        <div className={`transition-all duration-300 ease-in-out ${openSection === 'producto' ? 'opacity-100 max-h-[1000px]' : 'max-h-0 opacity-0 overflow-hidden'}`}>
+          <nav className="px-4 pb-4">
+            <ul className="space-y-1">
+            <li>
+              <button
+                onClick={() => setActiveTab('producto')}
+                className={`w-full text-left cursor-pointer px-3 py-2 rounded-lg transition-all duration-200 flex items-center gap-3 text-sm ${
+                  activeTab === 'producto' 
+                    ? 'bg-blue-600/20 text-blue-400 font-semibold' 
+                    : 'hover:bg-gray-800/80 hover:text-white'
+                }`}
+              >
+                <div className={`w-1.5 h-1.5 rounded-full ${activeTab === 'producto' ? 'bg-blue-400' : 'bg-transparent'}`}></div>
+                Productos
+              </button>
+            </li>
             <li>
               <button
                 onClick={() => setActiveTab('alta_pedido')}
@@ -258,7 +289,6 @@ function App() {
                 Pedidos
               </button>
             </li>
-
           </ul>
           </nav>
         </div>
