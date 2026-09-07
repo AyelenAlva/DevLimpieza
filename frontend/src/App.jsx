@@ -295,7 +295,7 @@ function App() {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col relative">
+      <main className="flex-1 flex flex-col relative min-w-0">
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5 pointer-events-none"></div>
         
         {/* Header */}
@@ -330,11 +330,11 @@ function App() {
         <div className="flex-1 overflow-y-auto px-8 pb-8 pt-4 custom-scrollbar relative z-0">
           <div className="animate-slide-up h-full">
           {activeTab === 'alta_cliente' ? (
-            <AltaCliente apiBase={API_BASE} />
+            <AltaCliente apiBase={API_BASE} setError={setError} showSuccess={showSuccess} />
           ) : activeTab === 'alta_empleado' ? (
-            <AltaEmpleado apiBase={API_BASE} />
+            <AltaEmpleado apiBase={API_BASE} setError={setError} showSuccess={showSuccess} />
           ) : activeTab === 'alta_distribuidora' ? (
-            <AltaDistribuidora apiBase={API_BASE} />
+            <AltaDistribuidora apiBase={API_BASE} setError={setError} showSuccess={showSuccess} />
           ) : activeTab === 'alta_pedido' ? (
             <AltaPedido apiBase={API_BASE} setError={setError} showSuccess={showSuccess} />
           ) : activeTab === 'funcion_pago' ? (
