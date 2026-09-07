@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useSortableData } from '../hooks/useSortableData';
 
 export default function TablaParametrica({ data, onEdit, onDelete, onAdd, title, description, fields = [], selectOptions = {} }) {
   const [searchTerm, setSearchTerm] = useState('');
@@ -44,6 +45,8 @@ export default function TablaParametrica({ data, onEdit, onDelete, onAdd, title,
     )
   );
 
+  const { items: sortedData, requestSort, getSortIcon } = useSortableData(filteredData, { key: columns[0], direction: 'asc' });
+
   return (
     <div className="space-y-6 animate-fade-in flex flex-col h-full">
       <div className="flex justify-between items-center bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
@@ -78,9 +81,10 @@ export default function TablaParametrica({ data, onEdit, onDelete, onAdd, title,
               <th
                 key={col}
                 scope="col"
-                className="px-6 py-4"
+                className="px-6 py-4 cursor-pointer hover:bg-gray-200 transition-colors"
+                onClick={() => requestSort(col)}
               >
-                {col.replace('_', ' ')}
+                {col.replace('_', ' ')}{getSortIcon(col)}
               </th>
             ))}
             <th scope="col" className="px-6 py-4">
@@ -89,7 +93,7 @@ export default function TablaParametrica({ data, onEdit, onDelete, onAdd, title,
           </tr>
         </thead>
         <tbody>
-          {filteredData.map((row, index) => {
+          {sortedData.map((row, index) => {
             const pkValue = row[columns[0]] || index;
             return (
             <tr key={pkValue} className="border-b border-gray-100 hover:bg-gray-50">

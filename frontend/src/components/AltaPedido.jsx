@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import axios from 'axios';
 import Select from 'react-select';
+import { useSortableData } from '../hooks/useSortableData';
 
 const API_BASE = import.meta.env.PROD 
   ? '../api/index.php' 
@@ -208,12 +209,14 @@ export default function AltaPedido({ apiBase, setError, showSuccess }) {
     )
   );
 
+  const { items: sortedPedidos, requestSort, getSortIcon } = useSortableData(filteredPedidos, { key: 'ID_PEDIDO', direction: 'desc' });
+
   return (
     <div className="space-y-6 animate-fade-in">
       <div className="flex justify-between items-center bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
         <div>
           <h2 className="text-2xl font-bold text-gray-800">Pedidos de Stock</h2>
-          <p className="text-gray-500 text-sm mt-1">Gestión de cabeceras y detalles de compras</p>
+          <p className="text-gray-500 text-sm mt-1">Gestión de pedidos</p>
         </div>
         <button
           onClick={handleOpenModal}
@@ -246,16 +249,16 @@ export default function AltaPedido({ apiBase, setError, showSuccess }) {
               <thead className="bg-gray-50/80 text-gray-600 font-semibold uppercase tracking-wider text-xs">
                 <tr>
                   <th className="px-6 py-4 w-10"></th>
-                  <th className="px-6 py-4">ID</th>
-                  <th className="px-6 py-4">Distribuidora</th>
-                  <th className="px-6 py-4">Estado</th>
-                  <th className="px-6 py-4">Fecha Pedido</th>
+                  <th className="px-6 py-4 cursor-pointer hover:bg-gray-200 transition-colors" onClick={() => requestSort('ID_PEDIDO')}>ID{getSortIcon('ID_PEDIDO')}</th>
+                  <th className="px-6 py-4 cursor-pointer hover:bg-gray-200 transition-colors" onClick={() => requestSort('DISTRIBUIDORA')}>Distribuidora{getSortIcon('DISTRIBUIDORA')}</th>
+                  <th className="px-6 py-4 cursor-pointer hover:bg-gray-200 transition-colors" onClick={() => requestSort('ESTADO_PEDIDO')}>Estado{getSortIcon('ESTADO_PEDIDO')}</th>
+                  <th className="px-6 py-4 cursor-pointer hover:bg-gray-200 transition-colors" onClick={() => requestSort('FECHA_PEDIDO')}>Fecha Pedido{getSortIcon('FECHA_PEDIDO')}</th>
                   <th className="px-6 py-4">Observación</th>
                   <th className="px-6 py-4">Recepción</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
-                {filteredPedidos.map((p) => (
+                {sortedPedidos.map((p) => (
                   <React.Fragment key={p.ID_PEDIDO}>
                     <tr className="hover:bg-gray-50 transition-colors">
                       <td className="px-6 py-4 text-center">
@@ -424,10 +427,10 @@ export default function AltaPedido({ apiBase, setError, showSuccess }) {
 
                   <div className="space-y-3">
                     {formData.items.length > 0 && (
-                      <div className="flex gap-3 px-3 pb-1 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                      <div className="flex text-xs font-semibold text-gray-500 uppercase tracking-wider px-2">
                         <div className="flex-1">Producto</div>
                         <div className="w-24 text-right">Cantidad</div>
-                        <div className="w-32 text-right">Costo ($)</div>
+                        <div className="w-32 text-right">Costo U. ($)</div>
                         <div className="w-10"></div>
                       </div>
                     )}

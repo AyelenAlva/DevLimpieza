@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import axios from 'axios';
 import Select from 'react-select';
+import { useSortableData } from '../hooks/useSortableData';
 
 export default function AltaCliente({ apiBase }) {
   const [data, setData] = useState([]);
@@ -123,6 +124,8 @@ export default function AltaCliente({ apiBase }) {
     )
   );
 
+  const { items: sortedData, requestSort, getSortIcon } = useSortableData(filteredData, { key: 'ID_CLIENTE', direction: 'desc' });
+
   return (
     <div className="space-y-6 animate-fade-in flex flex-col h-full">
       <div className="flex justify-between items-center bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
@@ -156,18 +159,18 @@ export default function AltaCliente({ apiBase }) {
           <table className="min-w-full text-left text-sm whitespace-nowrap">
             <thead className="uppercase tracking-wider border-b-2 border-gray-200 bg-gray-50">
               <tr>
-                <th className="px-6 py-4">ID</th>
-                <th className="px-6 py-4">Tipo</th>
-                <th className="px-6 py-4">Nombre / Razón Social</th>
-                <th className="px-6 py-4">Teléfono</th>
-                <th className="px-6 py-4">Email</th>
-                <th className="px-6 py-4">Estado</th>
-                <th className="px-6 py-4">Ciudad</th>
+                <th className="px-6 py-4 cursor-pointer hover:bg-gray-200 transition-colors" onClick={() => requestSort('ID_CLIENTE')}>ID{getSortIcon('ID_CLIENTE')}</th>
+                <th className="px-6 py-4 cursor-pointer hover:bg-gray-200 transition-colors" onClick={() => requestSort('TIPO_PERSONA')}>Tipo{getSortIcon('TIPO_PERSONA')}</th>
+                <th className="px-6 py-4 cursor-pointer hover:bg-gray-200 transition-colors" onClick={() => requestSort('APELLIDO')}>Nombre / Razón Social{getSortIcon('APELLIDO')}</th>
+                <th className="px-6 py-4 cursor-pointer hover:bg-gray-200 transition-colors" onClick={() => requestSort('TELEFONO')}>Teléfono{getSortIcon('TELEFONO')}</th>
+                <th className="px-6 py-4 cursor-pointer hover:bg-gray-200 transition-colors" onClick={() => requestSort('EMAIL')}>Email{getSortIcon('EMAIL')}</th>
+                <th className="px-6 py-4 cursor-pointer hover:bg-gray-200 transition-colors" onClick={() => requestSort('DESC_ESTADO')}>Estado{getSortIcon('DESC_ESTADO')}</th>
+                <th className="px-6 py-4 cursor-pointer hover:bg-gray-200 transition-colors" onClick={() => requestSort('DESC_CIUDAD')}>Ciudad{getSortIcon('DESC_CIUDAD')}</th>
                 <th className="px-6 py-4">Acciones</th>
               </tr>
             </thead>
             <tbody>
-              {filteredData.map((row, i) => (
+              {sortedData.map((row, i) => (
                 <tr key={i} className="border-b border-gray-100 hover:bg-gray-50">
                   <td className="px-6 py-4">{row.ID_CLIENTE || row.ID_PERSONA}</td>
                   <td className="px-6 py-4">{row.TIPO_PERSONA}</td>

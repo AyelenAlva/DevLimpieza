@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import axios from 'axios';
 import Select from 'react-select';
+import { useSortableData } from '../hooks/useSortableData';
 
 export default function AltaFuncionPago({ apiBase, setError, showSuccess }) {
   const [data, setData] = useState([]);
@@ -125,6 +126,8 @@ export default function AltaFuncionPago({ apiBase, setError, showSuccess }) {
     )
   );
 
+  const { items: sortedData, requestSort, getSortIcon } = useSortableData(filteredData, { key: 'DESC_FUNCION', direction: 'asc' });
+
   return (
     <div className="space-y-6 animate-fade-in flex flex-col h-full">
       <div className="flex justify-between items-center bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
@@ -158,16 +161,16 @@ export default function AltaFuncionPago({ apiBase, setError, showSuccess }) {
           <table className="min-w-full text-left text-sm whitespace-nowrap">
             <thead className="uppercase tracking-wider border-b-2 border-gray-200 bg-gray-50">
               <tr>
-                <th className="px-6 py-4">Función</th>
-                <th className="px-6 py-4">Tipo de Pago</th>
-                <th className="px-6 py-4">Monto</th>
-                <th className="px-6 py-4">Fecha Desde</th>
-                <th className="px-6 py-4">Fecha Hasta</th>
+                <th className="px-6 py-4 cursor-pointer hover:bg-gray-200 transition-colors" onClick={() => requestSort('DESC_FUNCION')}>Función{getSortIcon('DESC_FUNCION')}</th>
+                <th className="px-6 py-4 cursor-pointer hover:bg-gray-200 transition-colors" onClick={() => requestSort('DESC_TIPO_PAGO')}>Tipo de Pago{getSortIcon('DESC_TIPO_PAGO')}</th>
+                <th className="px-6 py-4 cursor-pointer hover:bg-gray-200 transition-colors" onClick={() => requestSort('MONTO')}>Monto{getSortIcon('MONTO')}</th>
+                <th className="px-6 py-4 cursor-pointer hover:bg-gray-200 transition-colors" onClick={() => requestSort('FECHA_DESDE')}>Fecha Desde{getSortIcon('FECHA_DESDE')}</th>
+                <th className="px-6 py-4 cursor-pointer hover:bg-gray-200 transition-colors" onClick={() => requestSort('FECHA_HASTA')}>Fecha Hasta{getSortIcon('FECHA_HASTA')}</th>
                 <th className="px-6 py-4">Acciones</th>
               </tr>
             </thead>
             <tbody>
-              {filteredData.map((row, i) => (
+              {sortedData.map((row, i) => (
                 <tr key={i} className="border-b border-gray-100 hover:bg-gray-50">
                   <td className="px-6 py-4">{row.FUNCION || getFuncionName(row.ID_FUNCION)}</td>
                   <td className="px-6 py-4">{row.TIPO_PAGO || getTipoPagoName(row.ID_TIPO_PAGO)}</td>
