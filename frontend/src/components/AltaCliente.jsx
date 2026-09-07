@@ -116,10 +116,13 @@ export default function AltaCliente({ apiBase }) {
   );
 
   return (
-    <div className="flex flex-col h-full relative">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-bold text-gray-800">Listado de Clientes</h2>
-        <button onClick={handleCreate} className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-5 py-2.5 rounded-xl hover:from-blue-700 hover:to-indigo-700 shadow-md hover:shadow-lg flex items-center transition-all font-medium gap-2 cursor-pointer">
+    <div className="space-y-6 animate-fade-in flex flex-col h-full">
+      <div className="flex justify-between items-center bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-800">Clientes</h2>
+          <p className="text-gray-500 text-sm mt-1">Gestión de base de datos de clientes</p>
+        </div>
+        <button onClick={handleCreate} className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-5 py-2.5 rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all shadow-md hover:shadow-lg font-medium cursor-pointer">
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
           Nuevo Cliente
         </button>
@@ -138,7 +141,7 @@ export default function AltaCliente({ apiBase }) {
         </svg>
       </div>
 
-      <div className="flex-1 overflow-auto bg-white rounded-lg shadow">
+      <div className="flex-1 overflow-auto bg-white rounded-2xl shadow-sm border border-gray-100">
         {loadingList ? (
           <div className="p-4 text-center">Cargando clientes...</div>
         ) : (
@@ -272,8 +275,8 @@ export default function AltaCliente({ apiBase }) {
             </div>
             
             <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end gap-3 rounded-b-2xl">
-              <button onClick={() => setIsModalOpen(false)} type="button" className="px-5 py-2.5 rounded-xl border border-gray-300 text-gray-700 font-medium hover:bg-gray-50 cursor-pointer transition-colors">Cancelar</button>
-              <button type="submit" form="form-cliente" disabled={saving} className="px-5 py-2.5 rounded-xl bg-indigo-600 text-white font-medium shadow-md hover:bg-indigo-700 cursor-pointer transition-colors disabled:opacity-50">
+              <button onClick={() => setIsModalOpen(false)} type="button" className="px-5 py-2.5 rounded-xl border border-gray-300 text-gray-700 font-medium hover:bg-gray-100 cursor-pointer transition-colors shadow-sm">Cancelar</button>
+              <button type="submit" form="form-cliente" disabled={saving} className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-medium shadow-md hover:from-blue-700 hover:to-indigo-700 cursor-pointer transition-all disabled:opacity-50">
                 {saving ? 'Guardando...' : 'Guardar Cliente'}
               </button>
             </div>

@@ -99,14 +99,14 @@ export default function FormularioModal({ isOpen, onClose, onSave, itemEdit, fie
             <button
               type="button"
               onClick={onClose}
-              className="px-5 py-2.5 rounded-xl border border-gray-300 text-gray-700 font-medium hover:bg-gray-50 cursor-pointer transition-colors"
+              className="px-5 py-2.5 rounded-xl border border-gray-300 text-gray-700 font-medium hover:bg-gray-100 cursor-pointer transition-colors shadow-sm"
             >
               Cancelar
             </button>
             <button
               type="submit"
               form="crud-form"
-              className="px-5 py-2.5 rounded-xl bg-indigo-600 text-white font-medium shadow-md hover:bg-indigo-700 cursor-pointer transition-colors"
+              className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-medium shadow-md hover:from-blue-700 hover:to-indigo-700 cursor-pointer transition-all"
             >
               Guardar
             </button>

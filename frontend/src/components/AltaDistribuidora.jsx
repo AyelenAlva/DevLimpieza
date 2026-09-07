@@ -106,11 +106,15 @@ export default function AltaDistribuidora({ apiBase }) {
   );
 
   return (
-    <div className="flex flex-col h-full relative">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-bold text-gray-800">Listado de Distribuidoras</h2>
-        <button onClick={handleCreate} className="bg-indigo-600 text-white px-4 py-2 rounded shadow hover:bg-indigo-700">
-          + Nueva Distribuidora
+    <div className="space-y-6 animate-fade-in flex flex-col h-full">
+      <div className="flex justify-between items-center bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-800">Distribuidoras</h2>
+          <p className="text-gray-500 text-sm mt-1">Gestión de proveedores y distribuidoras</p>
+        </div>
+        <button onClick={handleCreate} className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-5 py-2.5 rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all shadow-md hover:shadow-lg font-medium cursor-pointer">
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
+          Nueva Distribuidora
         </button>
       </div>
 
@@ -127,7 +131,7 @@ export default function AltaDistribuidora({ apiBase }) {
         </svg>
       </div>
 
-      <div className="flex-1 overflow-auto bg-white rounded-lg shadow">
+      <div className="flex-1 overflow-auto bg-white rounded-2xl shadow-sm border border-gray-100">
         {loadingList ? (
           <div className="p-4 text-center">Cargando distribuidoras...</div>
         ) : (
@@ -213,9 +217,9 @@ export default function AltaDistribuidora({ apiBase }) {
               </form>
             </div>
             
-            <div className="px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-end space-x-3">
-              <button onClick={() => setIsModalOpen(false)} className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50">Cancelar</button>
-              <button type="submit" form="form-distribuidora" disabled={saving} className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-50">
+            <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end gap-3 rounded-b-2xl">
+              <button onClick={() => setIsModalOpen(false)} type="button" className="px-5 py-2.5 rounded-xl border border-gray-300 text-gray-700 font-medium hover:bg-gray-100 cursor-pointer transition-colors shadow-sm">Cancelar</button>
+              <button type="submit" form="form-distribuidora" disabled={saving} className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-medium shadow-md hover:from-blue-700 hover:to-indigo-700 cursor-pointer transition-all disabled:opacity-50">
                 {saving ? 'Guardando...' : 'Guardar Distribuidora'}
               </button>
             </div>

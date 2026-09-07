@@ -126,11 +126,15 @@ export default function AltaFuncionPago({ apiBase, setError, showSuccess }) {
   );
 
   return (
-    <div className="flex flex-col h-full relative">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-bold text-gray-800">Listado de Pago por Función</h2>
-        <button onClick={handleCreate} className="bg-indigo-600 text-white px-4 py-2 rounded shadow hover:bg-indigo-700">
-          + Nuevo Registro
+    <div className="space-y-6 animate-fade-in flex flex-col h-full">
+      <div className="flex justify-between items-center bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-800">Pagos por Función</h2>
+          <p className="text-gray-500 text-sm mt-1">Gestión de tarifas y asignaciones</p>
+        </div>
+        <button onClick={handleCreate} className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-5 py-2.5 rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all shadow-md hover:shadow-lg font-medium cursor-pointer">
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
+          Nuevo Registro
         </button>
       </div>
 
@@ -147,7 +151,7 @@ export default function AltaFuncionPago({ apiBase, setError, showSuccess }) {
         </svg>
       </div>
 
-      <div className="flex-1 overflow-auto bg-white rounded-lg shadow">
+      <div className="flex-1 overflow-auto bg-white rounded-2xl shadow-sm border border-gray-100">
         {loadingList ? (
           <div className="p-4 text-center">Cargando datos...</div>
         ) : (
@@ -239,11 +243,11 @@ export default function AltaFuncionPago({ apiBase, setError, showSuccess }) {
                 <input type="number" step="0.01" name="monto" value={formData.monto} onChange={handleChange} required className="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:ring-2 focus:ring-indigo-500" />
               </div>
               
-              <div className="pt-4 flex justify-end gap-3">
-                <button type="button" onClick={() => setIsModalOpen(false)} className="px-5 py-2.5 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl font-medium">
+              <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end gap-3 rounded-b-2xl mt-4 -mx-6 -mb-6">
+                <button type="button" onClick={() => setIsModalOpen(false)} className="px-5 py-2.5 rounded-xl border border-gray-300 text-gray-700 font-medium hover:bg-gray-100 cursor-pointer transition-colors shadow-sm">
                   Cancelar
                 </button>
-                <button type="submit" className="px-5 py-2.5 text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl font-medium shadow-md">
+                <button type="submit" className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-medium shadow-md hover:from-blue-700 hover:to-indigo-700 cursor-pointer transition-all">
                   Guardar
                 </button>
               </div>
