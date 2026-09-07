@@ -310,16 +310,18 @@ function App() {
           </h1>
         </header>
 
-        {/* Alerts & Messages */}
-        <div className="px-6 pt-4">
+        {/* Global Toast Messages */}
+        <div className="fixed top-4 right-4 z-[9999] flex flex-col gap-3 w-full max-w-md pointer-events-none">
           {error && (
-            <div className="p-4 mb-4 text-red-700 bg-red-100 rounded-lg" role="alert">
-              {error}
+            <div className="p-4 bg-red-100 border border-red-200 text-red-700 rounded-xl shadow-2xl flex items-start justify-between animate-fade-in pointer-events-auto" role="alert">
+              <span className="font-medium flex-1">{error}</span>
+              <button onClick={() => setError(null)} className="ml-4 text-red-500 hover:text-red-700 focus:outline-none">&times;</button>
             </div>
           )}
           {successMsg && (
-            <div className="p-4 mb-4 text-green-700 bg-green-100 rounded-lg" role="alert">
-              {successMsg}
+            <div className="p-4 bg-green-100 border border-green-200 text-green-800 rounded-xl shadow-2xl flex items-start justify-between animate-fade-in pointer-events-auto" role="alert">
+              <span className="font-medium flex-1">{successMsg}</span>
+              <button onClick={() => setSuccessMsg(null)} className="ml-4 text-green-600 hover:text-green-800 focus:outline-none">&times;</button>
             </div>
           )}
         </div>

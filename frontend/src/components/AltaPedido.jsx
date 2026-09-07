@@ -366,7 +366,7 @@ export default function AltaPedido({ apiBase, setError, showSuccess }) {
                                         <td className="px-4 py-3 font-medium text-green-700">{r.DESCRIPCION_PRODUCTO_RECIBIDO}</td>
                                         <td className="px-4 py-3 text-right text-gray-500">{r.CANTIDAD_PEDIDA}</td>
                                         <td className="px-4 py-3 text-right font-bold text-gray-800">{r.CANTIDAD_RECIBIDA}</td>
-                                        <td className="px-4 py-3 text-right font-bold text-green-700">${parseFloat(r.COSTO_CAMBIO || 0).toFixed(2)}</td>
+                                        <td className="px-4 py-3 text-right font-bold text-green-700">${parseFloat(r.COSTO_UNITARIO_REAL ?? r.COSTO_CAMBIO ?? 0).toFixed(2)}</td>
                                         <td className="px-4 py-3 text-center">
                                           <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-lg">{r.ESTADO_DETALLE_RECEPCION}</span>
                                         </td>
