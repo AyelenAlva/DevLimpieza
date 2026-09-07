@@ -89,6 +89,14 @@ export default function AltaCliente({ apiBase }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!formData.id_estado || !formData.id_ciudad) {
+      setMessage({ text: '🚨 Error: Debe seleccionar un Estado y una Ciudad obligatoriamente.' });
+      return;
+    }
+    if (formData.telefono && !/^[0-9+\-\s()]+$/.test(formData.telefono)) {
+      setMessage({ text: '🚨 Error: El teléfono solo puede contener números.' });
+      return;
+    }
     setSaving(true);
     setMessage(null);
 
@@ -172,9 +180,6 @@ export default function AltaCliente({ apiBase }) {
                     <button onClick={() => handleEdit(row)} className="bg-indigo-50 text-indigo-600 px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-indigo-100 transition-colors">
                       Editar
                     </button>
-                    <button onClick={() => handleDelete(row.ID_PERSONA)} className="bg-red-50 text-red-600 px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-red-100 transition-colors">
-                      Eliminar
-                    </button>
                   </td>
                 </tr>
               ))}
@@ -222,7 +227,7 @@ export default function AltaCliente({ apiBase }) {
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700">Teléfono</label>
-                    <input type="text" name="telefono" value={formData.telefono} onChange={handleChange} className="mt-1 block w-full p-2 border border-gray-300 rounded" />
+                    <input type="tel" pattern="[0-9+\-\s()]+" title="Solo números y signos + o -" name="telefono" value={formData.telefono} onChange={handleChange} className="mt-1 block w-full p-2 border border-gray-300 rounded" />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700">Email</label>

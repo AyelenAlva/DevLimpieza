@@ -105,12 +105,6 @@ export default function TablaParametrica({ data, onEdit, onDelete, onAdd, title,
                 >
                   Editar
                 </button>
-                <button
-                  onClick={() => onDelete(pkValue)}
-                  className="bg-red-50 text-red-600 px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-red-100 transition-colors"
-                >
-                  Eliminar
-                </button>
               </td>
             </tr>
           )})}

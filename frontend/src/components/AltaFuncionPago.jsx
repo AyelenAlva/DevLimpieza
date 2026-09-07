@@ -178,9 +178,6 @@ export default function AltaFuncionPago({ apiBase, setError, showSuccess }) {
                     <button onClick={() => handleEdit(row)} className="bg-indigo-50 text-indigo-600 px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-indigo-100 transition-colors">
                       Editar
                     </button>
-                    <button onClick={() => handleDelete(row.ID_FUNCION_PAGO)} className="bg-red-50 text-red-600 px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-red-100 transition-colors">
-                      Eliminar
-                    </button>
                   </td>
                 </tr>
               ))}

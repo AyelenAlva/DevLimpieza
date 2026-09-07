@@ -135,7 +135,13 @@ export default function AltaPedido({ apiBase, setError, showSuccess }) {
 
   const handleSaveRecepcion = async (e) => {
     e.preventDefault();
-    if (!recepcionData.id_estado_cabecera) return setError("Seleccione el estado de la recepción");
+    if (!recepcionData.id_estado_cabecera) return setError("🚨 Error: Seleccione el estado de la recepción");
+
+    for (let det of recepcionData.detalles) {
+      if (det.cantidad_recibida < 0 || det.costo_unitario_real < 0) {
+        return setError("🚨 Error: No puede ingresar cantidades o costos negativos.");
+      }
+    }
 
     try {
       await axios.post(`${API_BASE}?action=recepcion`, recepcionData);
@@ -154,8 +160,15 @@ export default function AltaPedido({ apiBase, setError, showSuccess }) {
 
   const handleSave = async (e) => {
     e.preventDefault();
-    if (!formData.id_distribuidora) return setError("Seleccione una distribuidora");
-    if (formData.items.length === 0) return setError("Agregue al menos un producto");
+    if (!formData.id_distribuidora) return setError("🚨 Error: Seleccione una distribuidora");
+    if (formData.items.length === 0) return setError("🚨 Error: Agregue al menos un producto");
+    
+    for (let item of formData.items) {
+      if (!item.id_producto) return setError("🚨 Error: Hay productos sin seleccionar en la lista.");
+      if (item.cantidad <= 0 || item.costo_unitario < 0) {
+        return setError("🚨 Error: No puede ingresar cantidades cero/negativas o costos negativos.");
+      }
+    }
     
     try {
       await axios.post(`${API_BASE}?action=pedido`, {
