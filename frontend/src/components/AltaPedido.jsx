@@ -410,8 +410,16 @@ export default function AltaPedido({ apiBase, setError, showSuccess }) {
                   </div>
 
                   <div className="space-y-3">
+                    {formData.items.length > 0 && (
+                      <div className="flex gap-3 px-3 pb-1 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                        <div className="flex-1">Producto</div>
+                        <div className="w-24 text-right">Cantidad</div>
+                        <div className="w-32 text-right">Costo ($)</div>
+                        <div className="w-10"></div>
+                      </div>
+                    )}
                     {formData.items.map((item, index) => (
-                      <div key={index} className="flex gap-3 bg-white p-3 rounded-xl border border-gray-200">
+                      <div key={index} className="flex items-center gap-3 bg-white p-3 rounded-xl border border-gray-200">
                         <div className="flex-1">
                           <Select
                             options={productos.map(p => ({ value: p.ID_PRODUCTO, label: p.CODIGO_PRODUCTO ? `${p.CODIGO_PRODUCTO} - ${p.DESCRIPCION}` : p.DESCRIPCION }))}
@@ -425,7 +433,7 @@ export default function AltaPedido({ apiBase, setError, showSuccess }) {
                         </div>
                         <input type="number" min="1" required value={item.cantidad} onChange={e => handleItemChange(index, 'cantidad', parseFloat(e.target.value))} className="w-24 border p-2 rounded-lg text-right" placeholder="Cant." />
                         <input type="number" step="0.01" min="0" required value={item.costo_unitario} onChange={e => handleItemChange(index, 'costo_unitario', parseFloat(e.target.value))} className="w-32 border p-2 rounded-lg text-right" placeholder="Costo" />
-                        <button type="button" onClick={() => handleRemoveItem(index)} className="w-10 text-red-500">✕</button>
+                        <button type="button" onClick={() => handleRemoveItem(index)} className="w-10 text-red-500 hover:bg-red-50 py-2 rounded-lg flex justify-center">✕</button>
                       </div>
                     ))}
                   </div>
