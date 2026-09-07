@@ -77,10 +77,14 @@ class RecepcionController {
                      throw new Exception($out['mensaje']);
                 }
 
-                $this->pdo->commit();
+                if ($this->pdo->inTransaction()) {
+                    $this->pdo->commit();
+                }
                 echo json_encode(["success" => true, "message" => "Recepción registrada correctamente"]);
             } catch (Exception $e) {
-                $this->pdo->rollBack();
+                if ($this->pdo->inTransaction()) {
+                    $this->pdo->rollBack();
+                }
                 http_response_code(500);
                 echo json_encode(["error" => $e->getMessage()]);
             }
