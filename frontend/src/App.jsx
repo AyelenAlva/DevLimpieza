@@ -273,15 +273,6 @@ function App() {
              activeTab === 'funcion_pago' ? 'Pago por Función' :
              TABLAS.find(t => t.id === activeTab)?.label}
           </h1>
-          {!activeTab.startsWith('alta_') && activeTab !== 'funcion_pago' && (
-            <button
-              onClick={handleCreate}
-              className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-5 py-2.5 rounded-xl hover:from-blue-700 hover:to-indigo-700 shadow-md hover:shadow-lg flex items-center transition-all font-medium gap-2 animate-scale-in cursor-pointer"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
-              Nuevo Registro
-            </button>
-          )}
         </header>
 
         {/* Alerts & Messages */}
@@ -320,6 +311,9 @@ function App() {
               data={data}
               onEdit={handleEdit}
               onDelete={handleDelete}
+              onAdd={handleCreate}
+              title={TABLAS.find(t => t.id === activeTab)?.label || 'Registros'}
+              description={`Gestión de ${TABLAS.find(t => t.id === activeTab)?.nombre?.toLowerCase() || 'registros'}`}
               fields={TABLAS.find(t => t.id === activeTab)?.fields || []}
               selectOptions={selectOptions}
             />

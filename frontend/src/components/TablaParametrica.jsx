@@ -1,10 +1,26 @@
 import React, { useState } from 'react';
 
-export default function TablaParametrica({ data, onEdit, onDelete, fields = [], selectOptions = {} }) {
+export default function TablaParametrica({ data, onEdit, onDelete, onAdd, title, description, fields = [], selectOptions = {} }) {
   const [searchTerm, setSearchTerm] = useState('');
 
   if (!data || data.length === 0) {
-    return <div className="p-4 text-center text-gray-500">No hay registros disponibles.</div>;
+    return (
+      <div className="space-y-6 animate-fade-in flex flex-col h-full">
+        <div className="flex justify-between items-center bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+          <div>
+            <h2 className="text-2xl font-bold text-gray-800">{title}</h2>
+            <p className="text-gray-500 text-sm mt-1">{description}</p>
+          </div>
+          <button onClick={onAdd} className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-5 py-2.5 rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all shadow-md hover:shadow-lg font-medium cursor-pointer">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
+            Nuevo Registro
+          </button>
+        </div>
+        <div className="p-8 text-center text-gray-500 bg-white rounded-2xl shadow-sm border border-gray-100">
+          No hay registros disponibles.
+        </div>
+      </div>
+    );
   }
 
   const CAMPOS_OCULTOS = ['USUARIO_ALTA', 'FECHA_ALTA', 'USUARIO_MOD', 'FECHA_MOD'];
@@ -29,7 +45,18 @@ export default function TablaParametrica({ data, onEdit, onDelete, fields = [], 
   );
 
   return (
-    <div className="flex flex-col h-full relative">
+    <div className="space-y-6 animate-fade-in flex flex-col h-full">
+      <div className="flex justify-between items-center bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-800">{title}</h2>
+          <p className="text-gray-500 text-sm mt-1">{description}</p>
+        </div>
+        <button onClick={onAdd} className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-5 py-2.5 rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all shadow-md hover:shadow-lg font-medium cursor-pointer">
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
+          Nuevo Registro
+        </button>
+      </div>
+
       <div className="mb-4 relative">
         <input
           type="text"
@@ -42,7 +69,8 @@ export default function TablaParametrica({ data, onEdit, onDelete, fields = [], 
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
         </svg>
       </div>
-      <div className="flex-1 overflow-auto bg-white rounded-lg shadow">
+
+      <div className="flex-1 overflow-auto bg-white rounded-2xl shadow-sm border border-gray-100">
         <table className="min-w-full text-left text-sm whitespace-nowrap">
         <thead className="uppercase tracking-wider border-b-2 border-gray-200 bg-gray-50">
           <tr>
