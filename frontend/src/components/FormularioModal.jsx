@@ -95,20 +95,20 @@ export default function FormularioModal({ isOpen, onClose, onSave, itemEdit, fie
               </form>
             </div>
           </div>
-          <div className="mt-5 sm:mt-6 sm:flex sm:flex-row-reverse">
-            <button
-              type="submit"
-              form="crud-form"
-              className="inline-flex justify-center w-full px-4 py-2 text-base font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm"
-            >
-              Guardar
-            </button>
+          <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end gap-3 rounded-b-2xl">
             <button
               type="button"
               onClick={onClose}
-              className="inline-flex justify-center w-full px-4 py-2 mt-3 text-base font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+              className="px-5 py-2.5 rounded-xl border border-gray-300 text-gray-700 font-medium hover:bg-gray-50 cursor-pointer transition-colors"
             >
               Cancelar
+            </button>
+            <button
+              type="submit"
+              form="crud-form"
+              className="px-5 py-2.5 rounded-xl bg-indigo-600 text-white font-medium shadow-md hover:bg-indigo-700 cursor-pointer transition-colors"
+            >
+              Guardar
             </button>
           </div>
         </div>
