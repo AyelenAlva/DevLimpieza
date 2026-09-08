@@ -45,7 +45,7 @@ class ParametricasController {
         if ($method === 'GET') {
             try {
                 if ($tabla_db === 'PRODUCTO') {
-                    $stmt = $this->pdo->query("SELECT * FROM VW_PRODUCTO");
+                    $stmt = $this->pdo->query("SELECT p.CODIGO_PRODUCTO, vw.* FROM VW_PRODUCTO vw JOIN PRODUCTO p ON vw.ID_PRODUCTO = p.ID_PRODUCTO");
                 } else {
                     $stmt = $this->pdo->query("SELECT * FROM $tabla_db");
                 }
