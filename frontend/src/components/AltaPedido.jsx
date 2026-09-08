@@ -463,7 +463,7 @@ export default function AltaPedido({ apiBase, setError, showSuccess }) {
                       <div className="flex text-xs font-semibold text-gray-500 uppercase tracking-wider px-2">
                         <div className="flex-1">Producto</div>
                         <div className="w-24 text-right">Cantidad</div>
-                        <div className="w-32 text-right">Costo</div>
+                        <div className="w-32 text-right">Costo U. ($)</div>
                         <div className="w-10"></div>
                       </div>
                     )}
@@ -481,7 +481,7 @@ export default function AltaPedido({ apiBase, setError, showSuccess }) {
                           />
                         </div>
                         <input type="number" min="1" required value={item.cantidad} onChange={e => handleItemChange(index, 'cantidad', parseFloat(e.target.value))} className="w-24 border p-2 rounded-lg text-right" placeholder="Cant." />
-                        <input type="number" step="0.01" min="0" required value={item.costo_unitario} onChange={e => handleItemChange(index, 'costo_unitario', parseFloat(e.target.value))} className="w-32 border p-2 rounded-lg text-right" placeholder="Costo" />
+                        <input type="number" step="0.01" min="0" required value={item.costo_unitario} onChange={e => handleItemChange(index, 'costo_unitario', parseFloat(e.target.value))} className="w-32 border p-2 rounded-lg text-right" placeholder="Costo U. ($)" />
                         <button type="button" onClick={() => handleRemoveItem(index)} className="w-10 text-red-500 hover:bg-red-50 py-2 rounded-lg flex justify-center">✕</button>
                       </div>
                     ))}
