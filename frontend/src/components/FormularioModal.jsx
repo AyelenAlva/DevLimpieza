@@ -63,12 +63,12 @@ export default function FormularioModal({ isOpen, onClose, onSave, itemEdit, fie
                         <div className="mt-1">
                           <Select
                             options={(selectOptions[field.name] || []).map(opt => ({
-                              value: opt.id || opt.ID_ESTADO_USA,
-                              label: opt.NOMBRE || opt.nombre || opt.id
+                              value: opt.ID_UNIDAD_MEDIDA || opt.ID_TIPO_PRESENTACION || opt.id || opt.ID_ESTADO_USA || Object.values(opt)[0],
+                              label: opt.DESCRIPCION || opt.NOMBRE || opt.nombre || opt.id || Object.values(opt)[1]
                             }))}
                             value={(selectOptions[field.name] || []).map(opt => ({
-                              value: opt.id || opt.ID_ESTADO_USA,
-                              label: opt.NOMBRE || opt.nombre || opt.id
+                              value: opt.ID_UNIDAD_MEDIDA || opt.ID_TIPO_PRESENTACION || opt.id || opt.ID_ESTADO_USA || Object.values(opt)[0],
+                              label: opt.DESCRIPCION || opt.NOMBRE || opt.nombre || opt.id || Object.values(opt)[1]
                             })).find(o => o.value == formData[field.name]) || null}
                             onChange={opt => handleChange({ target: { name: field.name, value: opt ? opt.value : '' } })}
                             placeholder="Selecciona una opción"
@@ -82,10 +82,10 @@ export default function FormularioModal({ isOpen, onClose, onSave, itemEdit, fie
                           type={field.type}
                           name={field.name}
                           id={field.name}
+                          required={field.required}
                           value={formData[field.name] || ''}
                           onChange={handleChange}
                           className="block w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                          required
                         />
                       )}
                     </div>

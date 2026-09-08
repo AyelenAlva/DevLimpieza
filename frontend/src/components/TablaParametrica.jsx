@@ -24,7 +24,7 @@ export default function TablaParametrica({ data, onEdit, onDelete, onAdd, title,
     );
   }
 
-  const CAMPOS_OCULTOS = ['USUARIO_ALTA', 'FECHA_ALTA', 'USUARIO_MOD', 'FECHA_MOD'];
+  const CAMPOS_OCULTOS = ['USUARIO_ALTA', 'FECHA_ALTA', 'USUARIO_MOD', 'FECHA_MOD', 'ID_UNIDAD_MEDIDA', 'ID_TIPO_PRESENTACION'];
   
   // Extraer las columnas dinámicas de la primera fila excluyendo las de auditoría
   const columns = Object.keys(data[0]).filter(key => !CAMPOS_OCULTOS.includes(key));

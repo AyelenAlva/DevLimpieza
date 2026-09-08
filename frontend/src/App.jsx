@@ -34,8 +34,13 @@ const TABLAS = [
   { id: 'tipo_pago', label: 'Tipos de Pago', fields: [{ name: 'DESCRIPCION', label: 'Descripción', type: 'text' }] },
   { id: 'tipo_servicio', label: 'Tipos de Servicio', fields: [{ name: 'DESCRIPCION', label: 'Descripción', type: 'text' }] },
   { id: 'producto', label: 'Productos', fields: [
-    { name: 'CODIGO_PRODUCTO', label: 'Código', type: 'text' },
-    { name: 'DESCRIPCION', label: 'Descripción', type: 'text' }
+    { name: 'CODIGO_PRODUCTO', label: 'Código', type: 'text', required: true },
+    { name: 'DESCRIPCION', label: 'Descripción', type: 'text', required: true },
+    { name: 'MARCA', label: 'Marca', type: 'text', required: true },
+    { name: 'ID_UNIDAD_MEDIDA', label: 'Unidad de Medida', type: 'select', endpoint: 'unidad_medida', required: true },
+    { name: 'ID_TIPO_PRESENTACION', label: 'Tipo Presentación', type: 'select', endpoint: 'tipo_presentacion', required: true },
+    { name: 'CANTIDAD_PRESENTACION', label: 'Cant. Presentación', type: 'number', required: true },
+    { name: 'STOCK_MINIMO', label: 'Stock Mínimo', type: 'number', required: false }
   ]}
 ];
 
