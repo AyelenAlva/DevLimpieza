@@ -519,7 +519,20 @@ export default function AltaPedido({ apiBase, setError, showSuccess }) {
                     <select 
                       required
                       value={recepcionData.id_estado_cabecera}
-                      onChange={e => setRecepcionData({...recepcionData, id_estado_cabecera: e.target.value})}
+                      onChange={e => {
+                        const newEstadoId = e.target.value;
+                        const estadoObj = estadosRecepcion.find(est => est.ID_ESTADO.toString() === newEstadoId);
+                        const esCompleta = estadoObj && estadoObj.DESCRIPCION.toLowerCase().includes('completa');
+                        
+                        setRecepcionData(prev => ({
+                          ...prev,
+                          id_estado_cabecera: newEstadoId,
+                          detalles: prev.detalles.map(d => ({
+                            ...d,
+                            cantidad_recibida: esCompleta ? d.cantidad_pedida : d.cantidad_recibida
+                          }))
+                        }));
+                      }}
                       className="w-full rounded-xl border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 p-2.5 border"
                     >
                       <option value="">Seleccione estado...</option>
@@ -571,14 +584,20 @@ export default function AltaPedido({ apiBase, setError, showSuccess }) {
                               />
                             </td>
                             <td className="px-4 py-3 w-32">
-                              <input 
-                                type="number" 
-                                min="0" 
-                                required
-                                value={det.cantidad_recibida}
-                                onChange={e => handleRecepcionItemChange(index, 'cantidad_recibida', parseFloat(e.target.value))}
-                                className="w-full border border-gray-300 rounded-lg p-2 text-right text-sm"
-                              />
+                              {(() => {
+                                const isGlobalCompleta = estadosRecepcion.find(e => e.ID_ESTADO.toString() === recepcionData.id_estado_cabecera.toString())?.DESCRIPCION.toLowerCase().includes('completa');
+                                return (
+                                  <input 
+                                    type="number" 
+                                    min="0" 
+                                    required
+                                    disabled={isGlobalCompleta}
+                                    value={det.cantidad_recibida}
+                                    onChange={e => handleRecepcionItemChange(index, 'cantidad_recibida', parseFloat(e.target.value))}
+                                    className={`w-full border border-gray-300 rounded-lg p-2 text-right text-sm ${isGlobalCompleta ? 'bg-gray-100 text-gray-500 cursor-not-allowed' : ''}`}
+                                  />
+                                );
+                              })()}
                             </td>
                             <td className="px-4 py-3 w-32">
                               <input 
