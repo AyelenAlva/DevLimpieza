@@ -43,13 +43,18 @@ class ParametricasController {
         $tabla_db = strtoupper($tabla);
 
         if ($method === 'GET') {
-            if ($tabla_db === 'PRODUCTO') {
-                $stmt = $this->pdo->query("SELECT ID_PRODUCTO, CODIGO_PRODUCTO, DESCRIPCION, MARCA, descri_unidad_medida, descr_TIPO_PRESENTACION, CANTIDAD_PRESENTACION, STOCK_ACTUAL, STOCK_MINIMO, ID_UNIDAD_MEDIDA, ID_TIPO_PRESENTACION FROM VW_PRODUCTO");
-            } else {
-                $stmt = $this->pdo->query("SELECT * FROM $tabla_db");
+            try {
+                if ($tabla_db === 'PRODUCTO') {
+                    $stmt = $this->pdo->query("SELECT * FROM VW_PRODUCTO");
+                } else {
+                    $stmt = $this->pdo->query("SELECT * FROM $tabla_db");
+                }
+                $rows = $stmt->fetchAll();
+                echo json_encode($rows);
+            } catch (Exception $e) {
+                http_response_code(500);
+                echo json_encode(["error" => $e->getMessage()]);
             }
-            $rows = $stmt->fetchAll();
-            echo json_encode($rows);
             exit;
         }
 
