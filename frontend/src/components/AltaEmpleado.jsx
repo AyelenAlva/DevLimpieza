@@ -4,7 +4,7 @@ import axios from 'axios';
 import Select from 'react-select';
 import { useSortableData } from '../hooks/useSortableData';
 
-export default function AltaEmpleado({ apiBase }) {
+export default function AltaEmpleado({ apiBase, setError, showSuccess }) {
   const [data, setData] = useState([]);
   const [loadingList, setLoadingList] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -102,10 +102,10 @@ export default function AltaEmpleado({ apiBase }) {
     try {
       if (formData.id_persona) {
         await axios.put(`${apiBase}?action=crud_empleado&id=${formData.id_empleado}`, formData);
-        alert('Empleado actualizado exitosamente.');
+        showSuccess('Empleado actualizado exitosamente.');
       } else {
         const res = await axios.post(`${apiBase}?action=alta_empleado`, formData);
-        alert(res.data.message || 'Empleado registrado exitosamente.');
+        showSuccess(res.data.message || 'Empleado registrado exitosamente.');
       }
       setIsModalOpen(false);
       loadList();

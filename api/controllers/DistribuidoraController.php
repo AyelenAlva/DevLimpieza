@@ -32,7 +32,7 @@ class DistribuidoraController {
                 $data['sitio_web'] ?? null
             ]);
             $out = $this->pdo->query("SELECT @resultado AS resultado, @mensaje AS mensaje")->fetch();
-            if ($out['resultado'] == 0) {
+            if ((int)$out['resultado'] >= 0) {
                 echo json_encode(["success" => true, "message" => $out['mensaje']]);
             } else {
                 http_response_code(400); echo json_encode(["error" => $out['mensaje']]);
@@ -58,7 +58,7 @@ class DistribuidoraController {
                 ]);
                 
                 $out = $this->pdo->query("SELECT @resultado AS resultado, @mensaje AS mensaje")->fetch();
-                if ($out['resultado'] == 0) {
+                if ((int)$out['resultado'] >= 0) {
                     echo json_encode(["success" => true, "message" => $out['mensaje']]);
                 } else {
                     http_response_code(400); echo json_encode(["error" => $out['mensaje']]);
