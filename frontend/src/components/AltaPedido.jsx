@@ -382,7 +382,7 @@ export default function AltaPedido({ apiBase, setError, showSuccess }) {
                                       <th className="px-4 py-3">Producto Recibido</th>
                                       <th className="px-4 py-3 text-right">Cant. Pedida</th>
                                       <th className="px-4 py-3 text-right">Cant. Recibida</th>
-                                      <th className="px-4 py-3 text-right">Costo Real U.($)</th>
+                                      <th className="px-4 py-3 text-right">Costo U. ($)</th>
                                       <th className="px-4 py-3 text-center">Estado</th>
                                     </tr>
                                   </thead>
@@ -562,7 +562,7 @@ export default function AltaPedido({ apiBase, setError, showSuccess }) {
                           <th className="px-4 py-3">Producto Pedido</th>
                           <th className="px-4 py-3">Producto Ingresado</th>
                           <th className="px-4 py-3 text-right">Cant. Recibida</th>
-                          <th className="px-4 py-3 text-right">Costo Real U.($)</th>
+                          <th className="px-4 py-3 text-right">Costo U. ($)</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-gray-100">
