@@ -28,7 +28,17 @@ export default function FormularioModal({ isOpen, onClose, onSave, itemEdit, fie
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSave(formData);
+    const submitData = {};
+    if (itemEdit) {
+      // Include the primary key (assumed to be the first key)
+      const pkName = Object.keys(itemEdit)[0];
+      submitData[pkName] = itemEdit[pkName];
+    }
+    // Only include configured fields
+    fields.forEach(f => {
+      submitData[f.name] = formData[f.name];
+    });
+    onSave(submitData);
   };
 
   return (
