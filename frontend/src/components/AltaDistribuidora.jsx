@@ -15,7 +15,6 @@ export default function AltaDistribuidora({ apiBase, setError, showSuccess }) {
 
   const [ciudades, setCiudades] = useState([]);
   const [saving, setSaving] = useState(false);
-  const [message, setMessage] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
 
   const loadList = async () => {
@@ -47,7 +46,7 @@ export default function AltaDistribuidora({ apiBase, setError, showSuccess }) {
 
   const handleCreate = () => {
     setFormData({ id_persona: '', razon_social: '', telefono: '', email: '', direccion: '', id_ciudad: '' });
-    setMessage(null);
+    setError(null);
     setIsModalOpen(true);
   };
 
@@ -61,7 +60,7 @@ export default function AltaDistribuidora({ apiBase, setError, showSuccess }) {
       direccion: row.DIRECCION || '',
       id_ciudad: row.ID_CIUDAD || ''
     });
-    setMessage(null);
+    setError(null);
     setIsModalOpen(true);
   };
 
@@ -79,7 +78,7 @@ export default function AltaDistribuidora({ apiBase, setError, showSuccess }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSaving(true);
-    setMessage(null);
+    setError(null);
 
     try {
       if (formData.id_persona) {
@@ -94,7 +93,7 @@ export default function AltaDistribuidora({ apiBase, setError, showSuccess }) {
       setIsModalOpen(false);
       loadList(); // Recargar lista
     } catch (err) {
-      setMessage({ type: 'error', text: err.response?.data?.error || 'Error al guardar distribuidora.' });
+      setError(err.response?.data?.error || 'Error al guardar distribuidora.');
     } finally {
       setSaving(false);
     }

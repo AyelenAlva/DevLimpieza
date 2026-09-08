@@ -72,7 +72,7 @@ export default function AltaCliente({ apiBase, setError, showSuccess }) {
       id_ciudad: row.ID_CIUDAD || '',
       id_origen: row.ID_ORIGEN || ''
     });
-    setMessage(null);
+    setError(null);
     setIsModalOpen(true);
   };
 

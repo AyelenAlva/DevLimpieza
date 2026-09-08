@@ -84,20 +84,20 @@ export default function AltaEmpleado({ apiBase }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.id_ciudad) {
-      setMessage({ text: '🚨 Error: Debe seleccionar una Ciudad obligatoriamente.' });
+      setError('🚨 Error: Debe seleccionar una Ciudad obligatoriamente.');
       return;
     }
-    if (!formData.ssn || formData.ssn.trim() === '') {
-      setMessage({ text: '🚨 Error: El SSN/Documento no puede estar vacío.' });
+    if (!formData.ssn) {
+      setError('🚨 Error: El SSN/Documento no puede estar vacío.');
       return;
     }
     const phonePattern = /^[0-9]+$/;
     if (!formData.telefono || !phonePattern.test(formData.telefono)) {
-      setMessage({ text: '🚨 Error: El teléfono es obligatorio y solo puede contener números.' });
+      setError('🚨 Error: El teléfono es obligatorio y solo puede contener números.');
       return;
     }
     setSaving(true);
-    setMessage(null);
+    setError(null);
 
     try {
       if (formData.id_persona) {
@@ -108,9 +108,9 @@ export default function AltaEmpleado({ apiBase }) {
         alert(res.data.message || 'Empleado registrado exitosamente.');
       }
       setIsModalOpen(false);
-      loadList(); // Recargar lista
+      loadList();
     } catch (err) {
-      setMessage({ type: 'error', text: err.response?.data?.error || 'Error al guardar empleado.' });
+      setError(err.response?.data?.error || 'Error al guardar empleado.');
     } finally {
       setSaving(false);
     }

@@ -16,7 +16,8 @@ class ParametricasController {
             'vw_cliente',
             'vw_empleado',
             'vw_distribuidora',
-            'producto'
+            'producto',
+            'vw_producto'
         ];
     }
 
@@ -40,7 +41,11 @@ class ParametricasController {
         $tabla_db = strtoupper($tabla);
 
         if ($method === 'GET') {
-            $stmt = $this->pdo->query("SELECT * FROM $tabla_db");
+            if ($tabla_db === 'PRODUCTO') {
+                $stmt = $this->pdo->query("SELECT ID_PRODUCTO, DESCRIPCION, MARCA, descri_unidad_medida, descr_TIPO_PRESENTACION, CANTIDAD_PRESENTACION, STOCK_ACTUAL, STOCK_MINIMO FROM VW_PRODUCTO");
+            } else {
+                $stmt = $this->pdo->query("SELECT * FROM $tabla_db");
+            }
             $rows = $stmt->fetchAll();
             echo json_encode($rows);
             exit;
